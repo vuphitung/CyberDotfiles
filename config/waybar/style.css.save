@@ -1,0 +1,205 @@
+/* ============================================================
+   WAYBAR — CYBER TERMINAL  //  PHOSPHOR GREEN HACKER
+   GTK CSS compatible — không dùng ::after, @keyframes,
+   animation, box-shadow, text-shadow, :not(), transition
+   ============================================================ */
+
+@import "/home/tung/.cache/wal/colors-waybar.css";
+
+/* ── BASE ── */
+* {
+    font-family: "JetBrainsMono Nerd Font", "Monospace";
+    font-size: 12px;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+/* ── WINDOW ── */
+window#waybar {
+    background-color: rgba(2, 10, 2, 0.93);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.25);
+    color: #00ff41;
+}
+
+/* ── TOOLTIP ── */
+tooltip {
+    background-color: rgba(2, 10, 2, 0.97);
+    border: 1px solid rgba(0, 255, 65, 0.35);
+    border-radius: 0;
+    color: #00ff41;
+}
+
+tooltip label {
+    color: #00ff41;
+}
+
+/* ── LAUNCHER  $> ── */
+#custom-launcher {
+    font-size: 13px;
+    font-weight: 700;
+    color: #020a02;
+    background-color: #00ff41;
+    padding: 0 14px;
+    margin: 0;
+    letter-spacing: 2px;
+    border-right: 2px solid #009922;
+    min-height: 38px;
+}
+
+#custom-launcher:hover {
+    background-color: #33ff66;
+    color: #000;
+}
+
+/* ── WORKSPACES ── */
+#workspaces {
+    background-color: transparent;
+    border-left: 1px solid rgba(0, 255, 65, 0.12);
+    border-right: 1px solid rgba(0, 255, 65, 0.12);
+    margin: 0;
+    padding: 0;
+}
+
+#workspaces button {
+    padding: 0 11px;
+    color: rgba(0, 255, 65, 0.28);
+    background-color: transparent;
+    border-radius: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-right: 1px solid rgba(0, 255, 65, 0.08);
+    min-height: 38px;
+}
+
+#workspaces button:hover {
+    color: rgba(0, 255, 65, 0.75);
+    background-color: rgba(0, 255, 65, 0.07);
+}
+
+#workspaces button.active {
+    color: #00ff41;
+    background-color: rgba(0, 255, 65, 0.12);
+    border-radius: 0;
+    font-weight: 700;
+    border-bottom: 2px solid #00ff41;
+}
+
+#workspaces button.urgent {
+    color: #ff4444;
+    background-color: rgba(255, 68, 68, 0.1);
+}
+
+/* ── WINDOW TITLE ── */
+#window {
+    color: rgba(0, 255, 65, 0.4);
+    font-size: 11px;
+    font-style: italic;
+    padding: 0 14px;
+    letter-spacing: 1px;
+    border-right: 1px solid rgba(0, 255, 65, 0.1);
+}
+
+/* ── CLOCK ── */
+#clock {
+    color: #00ff41;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 0 20px;
+    margin: 0;
+    background-color: transparent;
+    border-left: 1px solid rgba(0, 255, 65, 0.15);
+    border-right: 1px solid rgba(0, 255, 65, 0.15);
+}
+
+/* ── RIGHT MODULES — shared base ── */
+#cpu,
+#memory,
+#temperature,
+#custom-updates,
+#pulseaudio,
+#backlight,
+#network,
+#battery {
+    padding: 0 10px;
+    margin: 0;
+    color: rgba(0, 255, 65, 0.5);
+    background-color: transparent;
+    border-radius: 0;
+    border-left: 1px solid rgba(0, 255, 65, 0.08);
+    font-size: 11px;
+    letter-spacing: 1px;
+    min-height: 38px;
+}
+
+#cpu:hover,
+#memory:hover,
+#temperature:hover,
+#custom-updates:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#network:hover,
+#battery:hover {
+    color: #00ff41;
+    background-color: rgba(0, 255, 65, 0.07);
+}
+
+/* ── INDIVIDUAL TINTS ── */
+#cpu            { color: rgba(0, 255, 65, 0.6); }
+#memory         { color: rgba(0, 210, 80, 0.55); }
+#temperature    { color: rgba(0, 255, 65, 0.5); }
+#temperature.critical { color: #ff4444; }
+
+#custom-updates { color: rgba(0, 255, 65, 0.8); }
+
+#pulseaudio     { color: rgba(80, 220, 255, 0.6); }
+#pulseaudio.muted { color: rgba(80, 220, 255, 0.25); }
+
+#backlight      { color: rgba(255, 220, 60, 0.5); }
+
+#network        { color: rgba(0, 255, 65, 0.55); }
+#network.disconnected { color: rgba(255, 68, 68, 0.7); }
+
+/* ── BATTERY ── */
+#battery        { color: rgba(0, 255, 65, 0.6); }
+#battery.charging { color: #00ff41; }
+#battery.warning { color: rgba(255, 180, 0, 0.85); }
+#battery.critical {
+    color: #ff4444;
+    background-color: rgba(255, 0, 0, 0.08);
+}
+
+/* ── TRAY ── */
+#tray {
+    padding: 0 10px;
+    border-left: 1px solid rgba(0, 255, 65, 0.08);
+    min-height: 38px;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+}
+
+/* ── POWER BUTTON ── */
+#custom-power {
+    font-size: 14px;
+    color: #ff4444;
+    background-color: rgba(20, 0, 0, 0.85);
+    padding: 0 16px;
+    margin: 0;
+    border-left: 1px solid rgba(255, 68, 68, 0.35);
+    border-radius: 0;
+    font-weight: bold;
+    min-height: 38px;
+}
+
+#custom-power:hover {
+    background-color: rgba(60, 0, 0, 0.95);
+    color: #ff6666;
+}
