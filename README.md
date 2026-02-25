@@ -11,7 +11,7 @@ Bản cấu hình Hyprland siêu nhẹ, được tinh chỉnh thủ công từ g
 ## ⌨️ Hệ thống Phím tắt (Essential Binds)
 Để làm chủ hệ thống, ông chỉ cần nhớ các phím "sống còn" sau:
 
-- **`Win + F1`** : 📜 **Bảng tra cứu phím tắt (Style MacBook)** - Quên phím gì cứ nhấn đây.
+- **`Win + F1`** : 📜 **Bảng tra cứu phím tắt** - Quên phím gì cứ nhấn đây.
 - **`Win + Q`** : Mở Terminal (Kitty)
 - **`Win + Space`**: Tìm kiếm ứng dụng (Rofi)
 - **`Win + E`** : Trình quản lý tệp tin (Dolphin)
