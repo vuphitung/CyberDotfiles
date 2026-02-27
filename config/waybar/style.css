@@ -1,30 +1,40 @@
 /* ============================================================
    WAYBAR — CYBER TERMINAL  //  PHOSPHOR GREEN HACKER
-   GTK CSS compatible — không dùng ::after, @keyframes,
-   animation, box-shadow, text-shadow, :not(), transition
+   Fix: workspace bracket, border mỏng, clock gọn, power corner
    ============================================================ */
 
 @import "/home/tung/.cache/wal/colors-waybar.css";
 
-/* ── BASE ── */
+/* ══ BASE ══ */
 * {
     font-family: "JetBrainsMono Nerd Font", "Monospace";
     font-size: 12px;
     border: none;
     border-radius: 0;
     min-height: 0;
+    padding: 0;
+    margin: 0;
 }
 
-/* ── WINDOW ── */
+/* ══ WINDOW — scanline nhẹ + border-bottom mỏng thanh thoát ══ */
 window#waybar {
-    background-color: rgba(2, 10, 2, 0.93);
-    border-bottom: 1px solid rgba(0, 255, 65, 0.25);
+    background-color: rgba(1, 8, 1, 0.96);
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 255, 65, 0.0)  0px,
+        rgba(0, 255, 65, 0.0)  2px,
+        rgba(0, 255, 65, 0.03) 2px,
+        rgba(0, 255, 65, 0.03) 4px
+    );
+    /* border mỏng nhẹ — không đập vào mắt */
+    border-top: 1px solid rgba(0, 255, 65, 0.35);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.35);
     color: #00ff41;
 }
 
-/* ── TOOLTIP ── */
+/* ══ TOOLTIP ══ */
 tooltip {
-    background-color: rgba(2, 10, 2, 0.97);
+    background-color: rgba(1, 8, 1, 0.98);
     border: 1px solid rgba(0, 255, 65, 0.35);
     border-radius: 0;
     color: #00ff41;
@@ -32,89 +42,89 @@ tooltip {
 
 tooltip label {
     color: #00ff41;
+    padding: 4px 8px;
 }
 
-/* ── LAUNCHER  $> ── */
+/* ══ LAUNCHER — xanh solid, không nổi cộm quá ══ */
 #custom-launcher {
-    font-size: 13px;
-    font-weight: 700;
-    color: #020a02;
+    font-size: 12px;
+    font-weight: 800;
+    color: #010801;
     background-color: #00ff41;
     padding: 0 14px;
-    margin: 0;
-    letter-spacing: 2px;
-    border-right: 2px solid #009922;
-    min-height: 38px;
+    border-right: 2px solid #007722;
+    letter-spacing: 1px;
+    min-height: 44px;
 }
 
 #custom-launcher:hover {
-    background-color: #33ff66;
-    color: #000;
+    background-color: #44ff77;
+    color: #000000;
 }
 
-/* ── WORKSPACES ── */
+/* ══ WORKSPACES — bracket <N> trên active ══ */
+
 #workspaces {
     background-color: transparent;
     border-left: 1px solid rgba(0, 255, 65, 0.12);
     border-right: 1px solid rgba(0, 255, 65, 0.12);
-    margin: 0;
     padding: 0;
+    margin: 0;
 }
 
 #workspaces button {
-    padding: 0 11px;
-    color: rgba(0, 255, 65, 0.28);
-    background-color: transparent;
-    border-radius: 0;
     font-size: 11px;
     font-weight: 600;
+    color: rgba(0, 255, 65, 0.5);
+    background-color: transparent;
+    border-radius: 0;
+    padding: 0 12px;
+    border-right: 1px solid rgba(0, 255, 65, 0.07);
+    border-bottom: 2px solid transparent;
+    min-height: 44px;
     letter-spacing: 1px;
-    border-right: 1px solid rgba(0, 255, 65, 0.08);
-    min-height: 38px;
 }
 
 #workspaces button:hover {
-    color: rgba(0, 255, 65, 0.75);
+    color: rgba(0, 255, 65, 0.85);
     background-color: rgba(0, 255, 65, 0.07);
+    border-bottom: 2px solid rgba(0, 255, 65, 0.4);
 }
 
 #workspaces button.active {
     color: #00ff41;
     background-color: rgba(0, 255, 65, 0.12);
-    border-radius: 0;
-    font-weight: 700;
+    font-weight: 800;
+    font-size: 12px;
     border-bottom: 2px solid #00ff41;
+    padding: 0 10px;
 }
 
-#workspaces button.urgent {
-    color: #ff4444;
-    background-color: rgba(255, 68, 68, 0.1);
-}
-
-/* ── WINDOW TITLE ── */
+/* ══ WINDOW TITLE ══ */
 #window {
-    color: rgba(0, 255, 65, 0.4);
+    color: rgba(0, 255, 65, 0.35);
     font-size: 11px;
     font-style: italic;
     padding: 0 14px;
     letter-spacing: 1px;
-    border-right: 1px solid rgba(0, 255, 65, 0.1);
+    border-right: 1px solid rgba(0, 255, 65, 0.08);
+    min-height: 44px;
 }
 
-/* ── CLOCK ── */
+/* ══ CLOCK — bỏ border dọc, chỉ màu xanh sáng ══ */
 #clock {
-    color: #00ff41;
     font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    padding: 0 20px;
-    margin: 0;
+    font-weight: 800;
+    color: #00ff41;
+    letter-spacing: 3px;
+    padding: 0 22px;
+    /* không có border-left/right — gọn, không thành cục */
     background-color: transparent;
-    border-left: 1px solid rgba(0, 255, 65, 0.15);
-    border-right: 1px solid rgba(0, 255, 65, 0.15);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.4);
+    min-height: 44px;
 }
 
-/* ── RIGHT MODULES — shared base ── */
+/* ══ RIGHT MODULES — base ══ */
 #cpu,
 #memory,
 #temperature,
@@ -123,15 +133,15 @@ tooltip label {
 #backlight,
 #network,
 #battery {
+    font-size: 11px;
     padding: 0 10px;
-    margin: 0;
-    color: rgba(0, 255, 65, 0.5);
     background-color: transparent;
     border-radius: 0;
+    /* border-left mỏng phân cách */
     border-left: 1px solid rgba(0, 255, 65, 0.08);
-    font-size: 11px;
     letter-spacing: 1px;
-    min-height: 38px;
+    min-height: 44px;
+    color: rgba(0, 255, 65, 0.5);
 }
 
 #cpu:hover,
@@ -143,63 +153,87 @@ tooltip label {
 #network:hover,
 #battery:hover {
     color: #00ff41;
-    background-color: rgba(0, 255, 65, 0.07);
+    background-color: rgba(0, 255, 65, 0.15);
 }
 
-/* ── INDIVIDUAL TINTS ── */
-#cpu            { color: rgba(0, 255, 65, 0.6); }
-#memory         { color: rgba(0, 210, 80, 0.55); }
-#temperature    { color: rgba(0, 255, 65, 0.5); }
-#temperature.critical { color: #ff4444; }
+/* ══ PER-MODULE COLOR ══ */
+#cpu             { color: rgba(0, 255, 65, 0.68); }
+#memory          { color: rgba(0, 210, 80,  0.62); }
+#temperature     { color: rgba(0, 255, 65, 0.58); }
+#temperature.critical {
+    color: #ff4444;
+    background-color: rgba(255, 0, 0, 0.08);
+    border-bottom: 1px solid rgba(255, 68, 68, 0.5);
+}
 
-#custom-updates { color: rgba(0, 255, 65, 0.8); }
+#custom-updates  { color: rgba(0, 255, 65, 0.85); }
 
-#pulseaudio     { color: rgba(80, 220, 255, 0.6); }
-#pulseaudio.muted { color: rgba(80, 220, 255, 0.25); }
+#pulseaudio      { color: rgba(80, 220, 255, 0.68); }
+#pulseaudio.muted { color: rgba(80, 220, 255, 0.2); }
 
-#backlight      { color: rgba(255, 220, 60, 0.5); }
+#backlight       { color: rgba(255, 210, 60, 0.58); }
 
-#network        { color: rgba(0, 255, 65, 0.55); }
-#network.disconnected { color: rgba(255, 68, 68, 0.7); }
+#network         { color: rgba(0, 255, 65, 0.62); }
+#network.disconnected {
+    color: rgba(255, 68, 68, 0.65);
+}
 
-/* ── BATTERY ── */
-#battery        { color: rgba(0, 255, 65, 0.6); }
-#battery.charging { color: #00ff41; }
-#battery.warning { color: rgba(255, 180, 0, 0.85); }
+/* ══ BATTERY ══ */
+#battery         { color: rgba(0, 255, 65, 0.65); }
+#battery.charging {
+    color: #00ff41;
+    background-color: rgba(0, 255, 65, 0.06);
+}
+#battery.warning  { color: rgba(255, 175, 0, 0.88); }
 #battery.critical {
     color: #ff4444;
     background-color: rgba(255, 0, 0, 0.08);
+    border-bottom: 1px solid rgba(255, 68, 68, 0.5);
 }
 
-/* ── TRAY ── */
+/* ══ TRAY ══ */
 #tray {
     padding: 0 10px;
     border-left: 1px solid rgba(0, 255, 65, 0.08);
-    min-height: 38px;
+    min-height: 44px;
+    background-color: transparent;
 }
 
-#tray > .passive {
-    -gtk-icon-effect: dim;
-}
+#tray > .passive       { -gtk-icon-effect: dim; }
+#tray > .needs-attention { -gtk-icon-effect: highlight; }
 
-#tray > .needs-attention {
-    -gtk-icon-effect: highlight;
-}
-
-/* ── POWER BUTTON ── */
+/* ══ POWER — cyber 2077 style ══ */
 #custom-power {
     font-size: 14px;
-    color: #ff4444;
-    background-color: rgba(20, 0, 0, 0.85);
-    padding: 0 16px;
+    font-weight: 800;
+    color: #ff3333;
+    background-color: transparent;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 255, 65, 0.0)  0px,
+        rgba(0, 255, 65, 0.0)  2px,
+        rgba(0, 255, 65, 0.03) 2px,
+        rgba(0, 255, 65, 0.03) 4px
+    );
+    padding: 0 18px;
     margin: 0;
-    border-left: 1px solid rgba(255, 68, 68, 0.35);
+
+    /* giống các module — chỉ có border-left mờ */
+    border-left:   1px solid rgba(0, 255, 65, 0.08);
+    /* border-right đậm hơn chút — đánh dấu kết thúc thanh */
+    border-right:  1px solid rgba(0, 255, 65, 0.35);
+    border-top:    none;
+    border-bottom: none;
+
     border-radius: 0;
-    font-weight: bold;
-    min-height: 38px;
+    min-height: 44px;
 }
 
 #custom-power:hover {
-    background-color: rgba(60, 0, 0, 0.95);
-    color: #ff6666;
+    color: #ff3333;
+    background-color: rgba(0, 255, 65, 0.08);
+    border-left:  1px solid rgba(0, 255, 65, 0.4);
+    border-right: 1px solid rgba(0, 255, 65, 0.9);
+    border-top:    1px solid rgba(0, 255, 65, 0.3);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.3);
 }

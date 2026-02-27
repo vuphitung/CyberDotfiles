@@ -1,7 +1,7 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 40,
+    "height": 44,
     "margin-top": 5,
     "margin-left": 10,
     "margin-right": 10,
@@ -29,50 +29,42 @@
     ],
 
     "custom/launcher": {
-        "format": "$>",
+        "format": "$>_",
         "on-click": "rofi -show drun",
         "tooltip": false
     },
-
-    "hyprland/workspaces": {
+  "hyprland/workspaces": {
         "format": "{name}",
         "on-click": "activate",
-        "format-icons": {
-            "active": "",
-            "default": ""
-        },
-        "sort-by-number": true
-    },
-
-    "hyprland/window": {
-        "format": "=> {title}",
-        "max-length": 35,
-        "separate-outputs": true
+        "sort-by-number": true,
+        "active-only": false
     },
 
     "cpu": {
         "interval": 5,
-        "format": " {usage}%",
+        "format": "󰍛 {usage}%",
+        "tooltip-format": "CPU: {usage}%",
         "on-click": "kitty -e btop"
     },
 
     "memory": {
         "interval": 10,
-        "format": " {percentage}%",
+        "format": "󰾆 {percentage}%",
         "tooltip-format": "RAM: {used:0.1f}GB / {total:0.1f}GB"
     },
 
     "temperature": {
         "critical-threshold": 80,
         "format": "{icon} {temperatureC}°C",
-        "format-icons": ["", "", ""]
+        "format-icons": ["󱃃", "󰔏", "󱃂"],
+        "tooltip": true
     },
 
     "custom/updates": {
-        "format": "󰚰 {}",
+        "format": "󰚰 {} upd",
         "escape": true,
         "return-type": "json",
-        "exec": "count_pacman=$(checkupdates | wc -l); count_aur=$(yay -Qu | wc -l); total=$((count_pacman + count_aur)); if [ $total -gt 0 ]; then echo \"{\\\"text\\\": \\\"$total\\\", \\\"tooltip\\\": \\\"Hệ thống: $count_pacman\\nAUR: $count_aur\\\"}\"; else echo \"{\\\"text\\\": \\\"0\\\", \\\"tooltip\\\": \\\"Hệ thống đã mới nhất\\\"}\"; fi",
+        "exec": "count_pacman=$(checkupdates 2>/dev/null | wc -l); count_aur=$(yay -Qu 2>/dev/null | wc -l); total=$((count_pacman + count_aur)); if [ $total -gt 0 ]; then echo \"{\\\"text\\\": \\\"$total\\\", \\\"tooltip\\\": \\\"Pacman: $count_pacman\\nAUR: $count_aur\\\"}\"; else echo \"{\\\"text\\\": \\\"0\\\", \\\"tooltip\\\": \\\"Up to date\\\"}\"; fi",
         "interval": 300,
         "on-click": "kitty -e yay -Syu; pkill -RTMIN+8 waybar",
         "signal": 8
@@ -85,34 +77,43 @@
     },
 
     "network": {
-        "format-wifi": " {essid}",
+        "format-wifi": "󰤨 {essid}",
         "format-ethernet": "󰈀 eth",
-        "format-disconnected": "󰖪 off",
+        "format-disconnected": "󰤭 offline",
+        "tooltip-format-wifi": "󰤨 {essid}\n󰓅 {signalStrength}%",
         "on-click": "nm-connection-editor"
     },
 
     "pulseaudio": {
         "format": "{icon} {volume}%",
-        "format-muted": "󰝟 mut",
-        "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+        "format-muted": "󰝟 muted",
+        "format-icons": {
+            "default": ["󰕿", "󰖀", "󰕾"],
+            "headphone": "󰋋",
+            "headset": "󰋎"
+        },
+        "scroll-step": 5,
         "on-click": "pavucontrol"
     },
 
     "backlight": {
         "format": "{icon} {percent}%",
-        "format-icons": ["", "", "", "", "", "", "", "", ""]
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
+        "scroll-step": 5
     },
 
     "battery": {
         "states": { "warning": 30, "critical": 15 },
         "format": "{icon} {capacity}%",
         "format-charging": "󱐋 {capacity}%",
-        "format-icons": ["", "", "", "", ""]
+        "format-plugged": "󰚥 {capacity}%",
+        "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+        "tooltip-format": "{timeTo} | {capacity}%"
     },
 
     "tray": {
-        "icon-size": 18,
-        "spacing": 10
+        "icon-size": 16,
+        "spacing": 8
     },
 
     "custom/power": {
