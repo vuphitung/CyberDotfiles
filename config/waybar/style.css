@@ -1,6 +1,5 @@
 /* ============================================================
-   WAYBAR — CYBER TERMINAL  //  PHOSPHOR GREEN HACKER
-   Fix: workspace bracket, border mỏng, clock gọn, power corner
+   WAYBAR — CYBER TERMINAL  //  PHOSPHOR GREEN HACKER  FINAL
    ============================================================ */
 
 @import "/home/tung/.cache/wal/colors-waybar.css";
@@ -16,26 +15,25 @@
     margin: 0;
 }
 
-/* ══ WINDOW — scanline nhẹ + border-bottom mỏng thanh thoát ══ */
+/* ══ WINDOW — scanline + glow xanh ══ */
 window#waybar {
-    background-color: rgba(1, 8, 1, 0.96);
+    background-color: rgba(0, 6, 0, 0.96);
     background-image: repeating-linear-gradient(
         to bottom,
         rgba(0, 255, 65, 0.0)  0px,
         rgba(0, 255, 65, 0.0)  2px,
-        rgba(0, 255, 65, 0.03) 2px,
-        rgba(0, 255, 65, 0.03) 4px
+        rgba(0, 255, 65, 0.08) 2px,
+        rgba(0, 255, 65, 0.08) 4px
     );
-    /* border mỏng nhẹ — không đập vào mắt */
-    border-top: 1px solid rgba(0, 255, 65, 0.35);
-    border-bottom: 1px solid rgba(0, 255, 65, 0.35);
+    border-top:    1px solid rgba(0, 255, 65, 0.6);
+    border-bottom: 1px solid rgba(0, 255, 65, 0.6);
     color: #00ff41;
 }
 
 /* ══ TOOLTIP ══ */
 tooltip {
-    background-color: rgba(1, 8, 1, 0.98);
-    border: 1px solid rgba(0, 255, 65, 0.35);
+    background-color: rgba(0, 6, 0, 0.98);
+    border: 1px solid rgba(0, 255, 65, 0.4);
     border-radius: 0;
     color: #00ff41;
 }
@@ -45,25 +43,23 @@ tooltip label {
     padding: 4px 8px;
 }
 
-/* ══ LAUNCHER — xanh solid, không nổi cộm quá ══ */
-#custom-launcher {
-    font-size: 12px;
+/* ══ MODE INDICATOR — "● NORMAL" pill xanh ══ */
+#custom-mode {
+    font-size: 11px;
     font-weight: 800;
     color: #010801;
     background-color: #00ff41;
-    padding: 0 14px;
-    border-right: 2px solid #007722;
-    letter-spacing: 1px;
+    padding: 0 16px;
+    letter-spacing: 2px;
+    border-right: 3px solid #005500;
     min-height: 44px;
 }
 
-#custom-launcher:hover {
+#custom-mode:hover {
     background-color: #44ff77;
-    color: #000000;
 }
 
-/* ══ WORKSPACES — bracket <N> trên active ══ */
-
+/* ══ WORKSPACES ══ */
 #workspaces {
     background-color: transparent;
     border-left: 1px solid rgba(0, 255, 65, 0.12);
@@ -100,6 +96,12 @@ tooltip label {
     padding: 0 10px;
 }
 
+#workspaces button.urgent {
+    color: #ff4444;
+    background-color: rgba(255, 68, 68, 0.07);
+    border-bottom: 2px solid #ff4444;
+}
+
 /* ══ WINDOW TITLE ══ */
 #window {
     color: rgba(0, 255, 65, 0.35);
@@ -111,16 +113,14 @@ tooltip label {
     min-height: 44px;
 }
 
-/* ══ CLOCK — bỏ border dọc, chỉ màu xanh sáng ══ */
+/* ══ CLOCK — sáng hơn, không border ══ */
 #clock {
     font-size: 13px;
     font-weight: 800;
     color: #00ff41;
     letter-spacing: 3px;
     padding: 0 22px;
-    /* không có border-left/right — gọn, không thành cục */
     background-color: transparent;
-    border-bottom: 1px solid rgba(0, 255, 65, 0.4);
     min-height: 44px;
 }
 
@@ -137,7 +137,6 @@ tooltip label {
     padding: 0 10px;
     background-color: transparent;
     border-radius: 0;
-    /* border-left mỏng phân cách */
     border-left: 1px solid rgba(0, 255, 65, 0.08);
     letter-spacing: 1px;
     min-height: 44px;
@@ -165,21 +164,15 @@ tooltip label {
     background-color: rgba(255, 0, 0, 0.08);
     border-bottom: 1px solid rgba(255, 68, 68, 0.5);
 }
-
 #custom-updates  { color: rgba(0, 255, 65, 0.85); }
-
 #pulseaudio      { color: rgba(80, 220, 255, 0.68); }
 #pulseaudio.muted { color: rgba(80, 220, 255, 0.2); }
-
 #backlight       { color: rgba(255, 210, 60, 0.58); }
-
 #network         { color: rgba(0, 255, 65, 0.62); }
-#network.disconnected {
-    color: rgba(255, 68, 68, 0.65);
-}
+#network.disconnected { color: rgba(255, 68, 68, 0.65); }
 
 /* ══ BATTERY ══ */
-#battery         { color: rgba(0, 255, 65, 0.65); }
+#battery          { color: rgba(0, 255, 65, 0.65); }
 #battery.charging {
     color: #00ff41;
     background-color: rgba(0, 255, 65, 0.06);
@@ -199,14 +192,14 @@ tooltip label {
     background-color: transparent;
 }
 
-#tray > .passive       { -gtk-icon-effect: dim; }
+#tray > .passive        { -gtk-icon-effect: dim; }
 #tray > .needs-attention { -gtk-icon-effect: highlight; }
 
 /* ══ POWER — cyber 2077 style ══ */
 #custom-power {
-    font-size: 14px;
-    font-weight: 800;
-    color: #ff3333;
+    font-size:        14px;
+    font-weight:      800;
+    color:            #ff3333;
     background-color: transparent;
     background-image: repeating-linear-gradient(
         to bottom,
@@ -215,25 +208,22 @@ tooltip label {
         rgba(0, 255, 65, 0.03) 2px,
         rgba(0, 255, 65, 0.03) 4px
     );
-    padding: 0 18px;
-    margin: 0;
+    padding:          0 18px;
+    margin:           0;
+    min-height:       44px;
 
-    /* giống các module — chỉ có border-left mờ */
-    border-left:   1px solid rgba(0, 255, 65, 0.08);
-    /* border-right đậm hơn chút — đánh dấu kết thúc thanh */
-    border-right:  1px solid rgba(0, 255, 65, 0.35);
-    border-top:    none;
-    border-bottom: none;
-
-    border-radius: 0;
-    min-height: 44px;
+    border-left:      1px solid rgba(0, 255, 65, 0.08);
+    border-right:     1px solid rgba(0, 255, 65, 0.45);
+    border-top:       none;
+    border-bottom:    none;
+    border-radius:    0;
 }
 
 #custom-power:hover {
-    color: #ff3333;
+    color:            #ff3333;
     background-color: rgba(0, 255, 65, 0.08);
-    border-left:  1px solid rgba(0, 255, 65, 0.4);
-    border-right: 1px solid rgba(0, 255, 65, 0.9);
-    border-top:    1px solid rgba(0, 255, 65, 0.3);
-    border-bottom: 1px solid rgba(0, 255, 65, 0.3);
+    border-left:      1px solid rgba(0, 255, 65, 0.4);
+    border-right:     1px solid rgba(0, 255, 65, 0.9);
+    border-top:       1px solid rgba(0, 255, 65, 0.3);
+    border-bottom:    1px solid rgba(0, 255, 65, 0.3);
 }

@@ -8,7 +8,7 @@
     "spacing": 0,
 
     "modules-left": [
-        "custom/launcher",
+        "custom/mode",
         "hyprland/workspaces",
         "hyprland/window"
     ],
@@ -28,16 +28,27 @@
         "custom/power"
     ],
 
-    "custom/launcher": {
-        "format": "$>_",
-        "on-click": "rofi -show drun",
-        "tooltip": false
-    },
-  "hyprland/workspaces": {
+   "custom/mode": {
+     "exec": "~/CyberDotfiles/config/waybar/blink.sh",
+     "format": "{}",
+     "on-click": "rofi -show drun",
+     "tooltip": false
+   },
+
+    "hyprland/workspaces": {
         "format": "{name}",
+        "format-icons": {
+            "active": "=> "
+        },
         "on-click": "activate",
         "sort-by-number": true,
         "active-only": false
+    },
+
+    "hyprland/window": {
+        "format": "=> {title}",
+        "max-length": 35,
+        "separate-outputs": true
     },
 
     "cpu": {
