@@ -12,9 +12,9 @@
         "hyprland/workspaces",
         "hyprland/window"
     ],
-    "modules-center": [
-        "clock"
-    ],
+    
+   "modules-center": ["custom/sweep-rtl", "clock", "custom/sweep"],
+    
     "modules-right": [
         "cpu",
         "memory",
@@ -34,6 +34,8 @@
      "on-click": "rofi -show drun",
      "tooltip": false
    },
+    
+   
 
     "hyprland/workspaces": {
         "format": "{name}",
@@ -45,11 +47,16 @@
         "active-only": false
     },
 
-    "hyprland/window": {
-        "format": "=> {title}",
-        "max-length": 35,
-        "separate-outputs": true
-    },
+   "hyprland/window": {
+     "format": "{}", 
+     "max-length": 35,
+     "separate-outputs": true,
+     "rewrite": {
+        "(.+)": "=> $1",
+        
+        "^$": "=> <span color='#00ff99'>󰣇</span> ARCH_ZEN_6.18 // HYPR_v0.53.3 // RESOURCE_ANALYZER"
+     }
+   },   
 
     "cpu": {
         "interval": 5,
@@ -80,6 +87,19 @@
         "on-click": "kitty -e yay -Syu; pkill -RTMIN+8 waybar",
         "signal": 8
     },
+
+"custom/sweep": {
+    "exec": "python3 ~/CyberDotfiles/config/waybar/sweep.py ltr 60",
+    "format": "{}",
+"restart-interval": 1,
+    "tooltip": false
+},
+"custom/sweep-rtl": {
+    "exec": "python3 ~/CyberDotfiles/config/waybar/sweep.py rtl 90",
+    "format": "{}",
+"restart-interval": 1,
+    "tooltip": false
+},    
 
     "clock": {
         "interval": 60,
