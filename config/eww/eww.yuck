@@ -1,0 +1,161 @@
+;; ─── POLLS ───────────────────────────────────────────────
+;; Dùng 1 poll duy nhất để tránh lag nhiều process
+(defpoll hub   :interval "2s"  :initial "{}" "scripts/hub.sh full")
+
+;; ─── WINDOW ──────────────────────────────────────────────
+(defwindow control_center
+  :monitor 0
+  :geometry (geometry :x "12px" :y "12px" :width "340px" :anchor "top right")
+  :stacking "fg"
+  :exclusive false
+  (cc-root))
+
+;; ─── ROOT ────────────────────────────────────────────────
+(defwidget cc-root []
+  (box :orientation "v" :space-evenly false :class "cc-root"
+    (cc-header)
+    (box :class "divider")
+    (cc-media)
+    (box :class "divider")
+    (cc-toggles)
+    (box :class "divider")
+    (cc-sliders)
+    (box :class "divider")
+    (cc-vitals)
+    (box :class "divider")
+    (cc-apps)
+    (cc-footer)))
+
+;; ─── HEADER ──────────────────────────────────────────────
+(defwidget cc-header []
+  (box :class "cc-header" :orientation "h" :halign "fill"
+    (label :class "cc-title" :text "SYS//CTRL" :halign "start" :hexpand true)
+    (label :class "cc-time" :text {formattime(EWW_TIME, "%H:%M:%S")} :halign "end")))
+
+;; ─── MEDIA ───────────────────────────────────────────────
+(defwidget cc-media []
+  (box :class "media-wrap"
+       :style "background-color:#040f0a; background-image: url('${hub.m_art ?: "none"}');"
+    (box :class "media-overlay" :orientation "v" :space-evenly false :valign "end"
+      (label :class "media-title"
+             :text {hub.m_title != "" ? hub.m_title : "Nothing Playing"}
+             :limit-width 24 :xalign 0)
+      (label :class "media-artist"
+             :text {hub.m_artist != "" ? hub.m_artist : "---"}
+             :limit-width 20 :xalign 0)
+      (box :class "media-controls" :orientation "h" :halign "center" :spacing 20
+        (button :class "media-btn" :onclick "scripts/action.sh prev" "󰒮")
+        (button :class "media-btn play" :onclick "scripts/action.sh play-pause"
+                {hub.m_status == "Playing" ? "󰏤" : "󰐊"})
+        (button :class "media-btn" :onclick "scripts/action.sh next" "󰒭")))))
+
+;; ─── TOGGLES ─────────────────────────────────────────────
+(defwidget cc-toggles []
+  (box :orientation "v" :space-evenly false
+    (box :class "section-label-box"
+      (label :class "section-label" :text "// INTERFACE" :xalign 0))
+    (box :class "toggles-grid" :orientation "h" :space-evenly true
+      (button :class {"toggle-btn " + (hub.wifi == "ON" ? "t-on" : "t-off")}
+              :onclick "scripts/action.sh toggle-wifi"
+              :onrightclick "scripts/action.sh open-wifi"
+        (box :orientation "v" :spacing 3
+          (label :class "t-icon" :text "󰖩")
+          (label :class "t-label" :text "WIFI")))
+      (button :class {"toggle-btn " + (hub.bt == "ON" ? "t-on t-blue" : "t-off")}
+              :onclick "scripts/action.sh toggle-bt"
+              :onrightclick "scripts/action.sh open-bt"
+        (box :orientation "v" :spacing 3
+          (label :class "t-icon" :text "󰂯")
+          (label :class "t-label" :text "BT")))
+      (button :class {"toggle-btn " + (hub.dnd == "ON" ? "t-on t-red" : "t-off")}
+              :onclick "scripts/action.sh toggle-dnd"
+        (box :orientation "v" :spacing 3
+          (label :class "t-icon" :text "󰂛")
+          (label :class "t-label" :text "DND")))
+      (button :class {"toggle-btn " + (hub.night == "ON" ? "t-on t-yellow" : "t-off")}
+              :onclick "scripts/action.sh toggle-night"
+        (box :orientation "v" :spacing 3
+          (label :class "t-icon" :text "󰖔")
+          (label :class "t-label" :text "NIGHT"))))))
+
+;; ─── SLIDERS ─────────────────────────────────────────────
+(defwidget cc-sliders []
+  (box :orientation "v" :space-evenly false
+    (box :class "section-label-box"
+      (label :class "section-label" :text "// SIGNAL" :xalign 0))
+    (box :class "sliders-section" :orientation "v" :spacing 8
+      ;; Brightness
+      (box :orientation "h" :space-evenly false :spacing 8 :valign "center"
+        (label :class "sl-icon sl-bright" :text "󰃠")
+        (scale :class "sl-track sl-bright-track"
+               :value {hub.bright ?: 50} :min 1 :max 101 :hexpand true
+               :onchange "scripts/action.sh set-bright {}")
+        (label :class "sl-val" :text {"${hub.bright ?: 50}%"}))
+      ;; Volume
+      (box :orientation "h" :space-evenly false :spacing 8 :valign "center"
+        (button :class "sl-icon sl-vol" :onclick "scripts/action.sh toggle-mute"
+                {hub.muted == "true" ? "󰝟" : "󰕾"})
+        (scale :class "sl-track sl-vol-track"
+               :value {hub.vol ?: 0} :min 0 :max 101 :hexpand true
+               :onchange "scripts/action.sh set-vol {}")
+        (label :class "sl-val" :text {"${hub.vol ?: 0}%"}))
+      ;; Mic
+      (box :orientation "h" :space-evenly false :spacing 8 :valign "center"
+        (button :class "sl-icon sl-mic" :onclick "scripts/action.sh toggle-mic-mute"
+                {hub.mic_muted == "true" ? "󰍭" : "󰍬"})
+        (scale :class "sl-track sl-mic-track"
+               :value {hub.mic ?: 0} :min 0 :max 101 :hexpand true
+               :onchange "scripts/action.sh set-mic {}")
+        (label :class "sl-val" :text {"${hub.mic ?: 0}%"})))))
+
+;; ─── VITALS ──────────────────────────────────────────────
+(defwidget cc-vitals []
+  (box :orientation "v" :space-evenly false
+    (box :class "section-label-box"
+      (label :class "section-label" :text "// VITALS" :xalign 0))
+    (box :class "vitals-grid" :orientation "h" :space-evenly true
+      (box :class "vital-box" :orientation "v" :spacing 3
+        (label :class "vital-label" :text "CPU")
+        (label :class "vital-val v-cyan" :text {"${hub.cpu ?: 0}%"})
+        (scale :class "vital-bar vb-cyan"
+               :value {hub.cpu ?: 0} :min 0 :max 100
+               :orientation "h" :draw-value false))
+      (box :class "vital-box" :orientation "v" :spacing 3
+        (label :class "vital-label" :text "RAM")
+        (label :class "vital-val v-purple" :text {"${hub.ram ?: 0}%"})
+        (scale :class "vital-bar vb-purple"
+               :value {hub.ram ?: 0} :min 0 :max 100
+               :orientation "h" :draw-value false))
+      (box :class "vital-box" :orientation "v" :spacing 3
+        (label :class "vital-label" :text "TEMP")
+        (label :class {"vital-val " + (hub.temp > 80 ? "v-red" : hub.temp > 65 ? "v-yellow" : "v-green")}
+               :text {"${hub.temp ?: 0}C"})
+        (scale :class "vital-bar vb-red"
+               :value {hub.temp ?: 0} :min 0 :max 105
+               :orientation "h" :draw-value false))
+      (box :class "vital-box" :orientation "v" :spacing 3
+        (label :class "vital-label" :text "BAT")
+        (label :class "vital-val v-yellow" :text {"${hub.bat ?: 0}%"})
+        (scale :class "vital-bar vb-yellow"
+               :value {hub.bat ?: 0} :min 0 :max 100
+               :orientation "h" :draw-value false)))))
+
+;; ─── APPS ────────────────────────────────────────────────
+(defwidget cc-apps []
+  (box :orientation "v" :space-evenly false
+    (box :class "section-label-box"
+      (label :class "section-label" :text "// LAUNCH" :xalign 0))
+    (box :class "apps-grid" :orientation "h" :space-evenly true
+      (button :class "app-btn" :onclick "scripts/action.sh app-browser" "󰊯")
+      (button :class "app-btn" :onclick "scripts/action.sh app-spotify" "󰓇")
+      (button :class "app-btn" :onclick "scripts/action.sh app-term"    "󰆍")
+      (button :class "app-btn" :onclick "scripts/action.sh app-code"    "󰨞")
+      (button :class "app-btn" :onclick "scripts/action.sh app-files"   "󰉋"))))
+
+;; ─── FOOTER ──────────────────────────────────────────────
+(defwidget cc-footer []
+  (box :class "cc-footer" :orientation "h" :space-evenly false
+    (label :class "footer-wifi" :hexpand true :xalign 0
+           :text {"󰖩 " + (hub.wifi == "ON" ? hub.wifi_name : "Offline")})
+    (label :class "footer-bat"
+           :text "BAT ${hub.bat ?: 0}%")))
