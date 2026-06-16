@@ -1,0 +1,31 @@
+# ╔══════════════════════════════════════════════════════════╗
+# ║           CYBERTUNG — NANO CONFIG v5                    ║
+# ╚══════════════════════════════════════════════════════════╝
+
+# ── GIAO DIỆN ────────────────────────────────────────────────
+set linenumbers
+set numbercolor cyan,black
+set selectedcolor black,cyan
+set titlecolor bold,white,blue
+set statuscolor bold,white,blue
+set errorcolor bold,white,red
+set spotlightcolor black,lightyellow
+set minicolor black,lightyellow
+set scrollercolor cyan
+
+# ── EDITOR ───────────────────────────────────────────────────
+set autoindent
+set tabsize 4
+set tabstospaces
+set softwrap
+set mouse
+set casesensitive
+set multibuffer
+set nohelp
+set smarthome
+set afterends
+set zap
+
+# ── SYNTAX HIGHLIGHT (dùng file hệ thống) ───────────────────
+include "/usr/share/nano/*.nanorc"
+include "/usr/share/nano/extra/*.nanorc"

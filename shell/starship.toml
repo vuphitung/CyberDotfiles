@@ -1,0 +1,50 @@
+# Scan timeout - fix warning
+scan_timeout = 10
+command_timeout = 500
+
+# Chỉ hiện những gì cần thiết
+format = """
+$directory$git_branch$git_status$python$nodejs$rust$cmd_duration
+$character"""
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+
+[git_branch]
+symbol = " "
+style = "bold purple"
+
+[git_status]
+ahead = "⇡${count}"
+behind = "⇣${count}"
+modified = "!${count}"
+untracked = "?${count}"
+staged = "+${count}"
+
+[cmd_duration]
+min_time = 2000
+format = " took [$duration](bold yellow)"
+
+[character]
+success_symbol = "[❯](bold cyan)"
+error_symbol = "[❯](bold red)"
+
+# Tắt những module chậm không cần
+[battery]
+disabled = true
+
+[package]
+disabled = true
+
+[golang]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[python]
+disabled = false
+
+[rust]
+disabled = true
