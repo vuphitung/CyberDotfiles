@@ -124,7 +124,7 @@ def chk_system_extra():
         print("    ⚠️  Đang chạy bằng pin nhưng profile = performance → powerprofilesctl set balanced"); n += 1
     cores = sh("coredumpctl list --since '-7 days' --no-pager 2>/dev/null | grep -c python")
     if cores and cores != "0":
-        print(f"    ⚠️  {cores} crash python trong 7 ngày → coredumpctl info <PID> (nghi pywal)"); n += 1
+        print(f"    ⚠️  {cores} crash python trong 7 ngày → coredumpctl info <PID>"); n += 1
     return n
 
 def run():
