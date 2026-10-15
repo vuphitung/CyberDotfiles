@@ -24,15 +24,14 @@ alias wal-pick='bash ~/CyberDotfiles/scripts/wall-picker.sh'
 
 # ── SYSTEM ───────────────────────────────────────────────────
 alias update='sudo pacman -Syu'
-alias install='sudo pacman -S'
+alias pacin='sudo pacman -S'   # đổi tên: 'install' trùng lệnh coreutils
 alias remove='sudo pacman -Rns'
-alias orphans='sudo pacman -Rns $(pacman -Qtdq)'
 alias mirrors='sudo reflector --latest 10 --sort rate --save /etc/pacman.d/mirrorlist'
 
 # ── CLIPBOARD / TOOLS ────────────────────────────────────────
 alias copy='wl-copy'
 alias paste='wl-paste'
-alias cat='bat --style=plain' 2>/dev/null || alias cat='cat'
+command -v bat  >/dev/null && alias cat='bat --style=plain'
 
 # ── GIT ──────────────────────────────────────────────────────
 alias gs='git status'
@@ -43,4 +42,11 @@ alias gl='git log --oneline --graph --color'
 
 # ── TEMPERATURE ──────────────────────────────────────────────
 alias temp='sensors | grep -E "Core|temp"'
-alias htop='btop' 2>/dev/null || alias htop='htop'
+command -v btop >/dev/null && alias htop='btop'
+
+
+# ── v6 ──
+export EDITOR="${EDITOR:-nano}"
+alias doctor='python3 ~/CyberDotfiles/scripts/check_health.py'
+alias hcheck='hyprctl configerrors'
+alias orphans='pacman -Qtdq | sudo pacman -Rns - 2>/dev/null || echo "Không có gói mồ côi"'

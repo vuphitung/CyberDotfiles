@@ -50,23 +50,25 @@ cat << 'ART'
   ╚██████╗   ██║   ██████╔╝███████╗██║  ██║
    ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ██║
 ART
-echo -e "  TUNG DOTFILES v5 — $D${N}\n"
+echo -e "  TUNG DOTFILES v6 — $D${N}\n"
 
 # ── 1. PACKAGES ─────────────────────────────────────────────
 log "PACKAGES"
-for p in hyprland hyprlock swww python-pywal \
-          kitty rofi wlogout nautilus \
-          pipewire pipewire-pulse pamixer playerctl \
-          brightnessctl \
-          swaynotificationcenter libnotify \
-          networkmanager nm-connection-editor blueman \
-          lm_sensors tlp \
-          imagemagick fzf \
-          ttf-jetbrains-mono-nerd \
-          fcitx5 fcitx5-gtk fcitx5-qt \
-          starship nano; do
-    pkg "$p"
-done
+PKGS="hyprland hyprlock hypridle hyprpolkitagent awww python-pywal \
+  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk wl-clipboard cliphist \
+  kitty rofi wlogout nautilus \
+  pipewire pipewire-pulse wireplumber pamixer playerctl brightnessctl \
+  swaynotificationcenter libnotify \
+  networkmanager nm-connection-editor blueman \
+  power-profiles-daemon lm_sensors \
+  imagemagick fzf jq bat btop \
+  ttf-jetbrains-mono-nerd noto-fonts-emoji papirus-icon-theme breeze \
+  fcitx5 fcitx5-gtk fcitx5-qt fcitx5-unikey \
+  starship nano zsh"
+# Một lệnh pacman duy nhất (nhanh hơn, và HIỆN lỗi thay vì nuốt vào /dev/null)
+sudo pacman -S --needed --noconfirm $PKGS || warn "pacman báo lỗi — kiểm tra phía trên"
+# Lưu ý: tlp đã bị bỏ vì xung đột power-profiles-daemon.
+# Nếu máy đang bật tlp:  sudo systemctl disable --now tlp
 
 log "AUR"
 for p in grimblast-git; do aur "$p"; done
@@ -127,7 +129,7 @@ log "WIFI FIX"
 if lspci 2>/dev/null | grep -iq "wireless\|wifi\|network"; then
     if [ ! -f /etc/modprobe.d/iwlwifi.conf ]; then
         sudo tee /etc/modprobe.d/iwlwifi.conf > /dev/null << 'MOD'
-options iwlwifi power_save=0 d0i3_disable=1 uapsd_disable=1
+options iwlwifi power_save=0 uapsd_disable=1
 options iwlmvm power_scheme=1
 MOD
         sudo tee /etc/NetworkManager/conf.d/wifi-powersave.conf > /dev/null << 'NM'

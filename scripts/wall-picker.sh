@@ -3,13 +3,13 @@
 # wall-picker.sh — PRISM TUI v4
 # ============================================================
 
-WALL_DIR="/home/tung/Pictures/Wallpapers/wallpapers"
+WALL_DIR="${CYBER_WALL_DIR:-$HOME/Pictures/Wallpapers}"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 THUMB_DIR="$HOME/.cache/prism-thumbs"
 THUMB_SIZE="600x400"
 
 # ── Deps ──────────────────────────────────────────────────
-for dep in fzf kitty convert identify; do
+for dep in fzf kitty magick identify; do
     command -v "$dep" &>/dev/null || {
         echo "❌ Thiếu: $dep  (sudo pacman -S imagemagick fzf)"
         exit 1
@@ -38,7 +38,7 @@ if (( NEED_GEN > 0 )); then
         HASH=$(md5sum <<< "$f" | cut -d' ' -f1)
         THUMB="$THUMB_DIR/$HASH.jpg"
         [ -f "$THUMB" ] && continue
-        convert "$f" \
+        magick "$f" \
             -thumbnail "${THUMB_SIZE}^" \
             -gravity center -extent "$THUMB_SIZE" \
             -quality 88 "$THUMB" 2>/dev/null
@@ -126,7 +126,6 @@ if [ -n "$SELECTED" ]; then
     NAME=$(cut -f2 <<< "$SELECTED")
     echo -e "\033[1;35m◆ PRISM\033[0m  →  \033[0;37m$NAME\033[0m"
     "$SCRIPT_DIR/wallpaper.sh" "$FULL_PATH"
-    notify-send -i "$FULL_PATH" -t 3000 "◆ PRISM" "$NAME"
 else
     echo -e "\033[38;5;240m  cancelled\033[0m"
 fi

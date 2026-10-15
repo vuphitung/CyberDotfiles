@@ -31,7 +31,7 @@ echo "NetworkManager config: created"
 # 3. Tạo modprobe config cho iwlwifi
 sudo tee /etc/modprobe.d/iwlwifi.conf << 'EOF'
 # Tắt power save và 11n để tránh mất beacon/kết nối
-options iwlwifi power_save=0 d0i3_disable=1 uapsd_disable=1
+options iwlwifi power_save=0 uapsd_disable=1
 options iwlmvm power_scheme=1
 EOF
 echo "iwlwifi modprobe config: created"
