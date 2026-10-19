@@ -1,0 +1,297 @@
+/* ============================================================
+ * CYBERTUNG // NEBULA CONTROL DECK — SwayNC Theme
+ * Target: swaync 0.12.x, GTK CSS
+ * ============================================================ */
+
+/* --- Palette ------------------------------------------------ */
+@define-color bg_base    #0a0a12;
+@define-color bg_surface #12141f;
+@define-color bg_raised  #1a1c2e;
+@define-color bg_hover   #222440;
+@define-color cyan       #00e5ff;
+@define-color violet     #7c3aed;
+@define-color pink       #f472b6;
+@define-color amber      #f59e0b;
+@define-color red        #ef4444;
+@define-color text       #e2e8f0;
+@define-color text_dim   #94a3b8;
+@define-color border     alpha(#00e5ff, 0.25);
+@define-color border_hi  alpha(#00e5ff, 0.5);
+
+/* --- Global ------------------------------------------------- */
+* {
+  font-family: "JetBrainsMono Nerd Font", monospace;
+  font-size: 14px;
+  color: @text;
+}
+
+/* === NOTIFICATION POPUPS ==================================== */
+
+/* Outer row wrapper — transparent so border shows on .notification */
+.notification-row {
+  outline: none;
+  padding: 0;
+  margin: 4px 0;
+}
+
+.notification-row:focus,
+.notification-row:hover {
+  background: transparent;
+}
+
+/* The notification card itself */
+.notification {
+  background: @bg_surface;
+  border: 1px solid @border;
+  border-radius: 12px;
+  padding: 0;
+  margin: 0 8px;
+}
+
+.notification:hover {
+  border-color: @border_hi;
+}
+
+/* Content area inside the notification */
+.notification-content {
+  padding: 12px 14px;
+  border-radius: 12px;
+}
+
+/* Default action wrapper (clickable area) */
+.notification-default-action {
+  background: transparent;
+  border-radius: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-default-action:hover {
+  background: @bg_hover;
+  border-radius: 12px;
+}
+
+/* --- Title / Body / Time ------------------------------------ */
+.summary {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 2px;
+}
+
+.body {
+  font-size: 13px;
+  font-weight: 400;
+  color: @text_dim;
+}
+
+.time {
+  font-size: 11px;
+  font-weight: 400;
+  color: @text_dim;
+  margin-right: 4px;
+}
+
+/* --- App icon ----------------------------------------------- */
+.notification-content .image {
+  margin-right: 10px;
+}
+
+/* --- Close button ------------------------------------------- */
+.close-button {
+  background: alpha(@bg_raised, 0.8);
+  color: @text_dim;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 2px;
+  margin: 6px 6px 0 0;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.close-button:hover {
+  background: @bg_hover;
+  color: @cyan;
+  border-color: @border;
+}
+
+/* --- Action buttons (inline reply, open, etc.) -------------- */
+.notification-action {
+  background: @bg_raised;
+  border: 1px solid @border;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin: 4px 2px 8px;
+  color: @text;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.notification-action:hover {
+  background: @bg_hover;
+  border-color: @cyan;
+  color: @cyan;
+}
+
+.notification-action:first-child {
+  margin-left: 8px;
+}
+
+.notification-action:last-child {
+  margin-right: 8px;
+}
+
+/* --- Urgency levels ----------------------------------------- */
+
+/* Low priority — dimmer */
+.low {
+  border-color: alpha(#94a3b8, 0.15);
+}
+
+.low .summary {
+  color: @text_dim;
+}
+
+/* Critical — amber border, red on extreme */
+.critical {
+  border-color: alpha(@amber, 0.5);
+}
+
+.critical:hover {
+  border-color: @amber;
+}
+
+.critical .summary {
+  color: @amber;
+  font-weight: 800;
+}
+
+/* === CONTROL CENTER PANEL =================================== */
+
+.control-center {
+  background: @bg_base;
+  border: 1px solid @border;
+  border-radius: 14px;
+  padding: 12px;
+  margin: 8px;
+}
+
+/* Scrollable notification list */
+.control-center-list {
+  background: transparent;
+  border-radius: 10px;
+}
+
+/* Notifications inside the control center reuse .notification styles above.
+   Tighten spacing so the list is scannable. */
+.control-center .notification-row {
+  margin: 3px 0;
+}
+
+.control-center .notification {
+  margin: 0;
+}
+
+/* --- Title widget ------------------------------------------- */
+.widget-title {
+  background: transparent;
+  padding: 8px 12px 4px;
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: @cyan;
+}
+
+.widget-title > label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: @cyan;
+}
+
+/* Dismiss-all / clear-all button */
+.widget-title > button {
+  background: @bg_raised;
+  border: 1px solid @border;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: @text;
+}
+
+.widget-title > button:hover {
+  background: @bg_hover;
+  border-color: @cyan;
+  color: @cyan;
+}
+
+/* --- DND toggle widget -------------------------------------- */
+.widget-dnd {
+  background: @bg_surface;
+  border: 1px solid alpha(@violet, 0.2);
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin: 4px 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.widget-dnd > switch {
+  border-radius: 10px;
+  background: @bg_raised;
+  border: 1px solid @border;
+}
+
+.widget-dnd > switch:checked {
+  background: alpha(@violet, 0.35);
+  border-color: @violet;
+}
+
+.widget-dnd > switch slider {
+  border-radius: 50%;
+  background: @text;
+  min-width: 18px;
+  min-height: 18px;
+  margin: 2px;
+}
+
+.widget-dnd > switch:checked slider {
+  background: @violet;
+}
+
+/* --- Floating button (top-bar bell icon dot) ---------------- */
+.widget-inhibitors > button {
+  font-size: 12px;
+}
+
+/* === EMPTY STATE ============================================ */
+.control-center-list > row > box > label {
+  /* "No Notifications" placeholder */
+  color: @text_dim;
+  font-size: 13px;
+  font-style: italic;
+  padding: 24px 0;
+}
+
+/* === SCROLLBAR ============================================== */
+scrollbar {
+  border-radius: 4px;
+}
+
+scrollbar slider {
+  background: alpha(@cyan, 0.15);
+  border-radius: 4px;
+  min-width: 4px;
+}
+
+scrollbar slider:hover {
+  background: alpha(@cyan, 0.3);
+}
+
+/* === BLANK WINDOW (behind popups) =========================== */
+.blank-window {
+  background: transparent;
+}

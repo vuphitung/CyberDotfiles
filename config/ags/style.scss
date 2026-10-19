@@ -1,0 +1,337 @@
+// ╔══════════════════════════════════════════════════════════╗
+// ║    CYBERTUNG // NEBULA CONTROL DECK — AGS THEME         ║
+// ║    Obsidian + Cyan + Violet · Intel HD 520 safe         ║
+// ╚══════════════════════════════════════════════════════════╝
+
+// ── Palette ─────────────────────────────────────────────────
+$bg-base:    #0a0a12;
+$bg-surface: #12141f;
+$bg-raised:  #1a1c2e;
+$bg-hover:   #222440;
+$cyan:       #00e5ff;
+$violet:     #7c3aed;
+$pink:       #f472b6;
+$amber:      #f59e0b;
+$red:        #ef4444;
+$text:       #e2e8f0;
+$text-dim:   #94a3b8;
+$text-muted: #4a5568;
+$border:     rgba(#00e5ff, 0.2);
+$border-hi:  rgba(#00e5ff, 0.5);
+$font:       "JetBrainsMono Nerd Font";
+$radius:     10px;
+$transition: 150ms ease-in-out;
+
+// ═══════════════════════════════════════════════════════════
+// BAR
+// ═══════════════════════════════════════════════════════════
+
+window.Bar {
+  background: transparent;
+  color: $text;
+  font-family: $font;
+  font-size: 13px;
+
+  > centerbox.bar-inner {
+    background: $bg-base;
+    border-bottom: 1px solid $border;
+    min-height: 36px;
+    padding: 0 8px;
+  }
+}
+
+// ── Workspaces ──────────────────────────────────────────────
+.workspaces {
+  margin: 0 4px;
+
+  .ws-btn {
+    min-width: 28px;
+    min-height: 28px;
+    margin: 4px 2px;
+    padding: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: $text-muted;
+    border: 1px solid transparent;
+    transition: all $transition;
+
+    label { font-size: 12px; font-weight: 600; }
+
+    &.occupied {
+      color: $text-dim;
+      background: $bg-raised;
+    }
+
+    &.active {
+      color: $cyan;
+      background: $bg-surface;
+      border-color: $cyan;
+    }
+
+    &:hover {
+      background: $bg-hover;
+      color: $text;
+    }
+  }
+}
+
+// ── Active window ───────────────────────────────────────────
+.active-window {
+  margin: 0 8px;
+
+  .win-title {
+    color: $text-dim;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+// ── Clock ───────────────────────────────────────────────────
+.clock {
+  background: transparent;
+  border-radius: $radius;
+  padding: 2px 12px;
+  margin: 4px 0;
+  border: 1px solid transparent;
+  transition: all $transition;
+
+  &:hover {
+    background: $bg-surface;
+    border-color: $border;
+  }
+
+  .clock-time {
+    color: $text;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .clock-sep {
+    color: $text-muted;
+    margin: 0 6px;
+    font-size: 14px;
+  }
+
+  .clock-date {
+    color: $text-dim;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+// ── System tray ─────────────────────────────────────────────
+.systray {
+  margin: 0 4px;
+
+  .sys-btn {
+    background: transparent;
+    color: $text-dim;
+    border: none;
+    border-radius: 8px;
+    padding: 2px 8px;
+    margin: 4px 1px;
+    font-size: 13px;
+    transition: all $transition;
+
+    &:hover {
+      background: $bg-surface;
+      color: $text;
+    }
+
+    &.low {
+      color: $red;
+    }
+
+    &.charging label {
+      color: $cyan;
+    }
+  }
+}
+
+// ── Control Center toggle ───────────────────────────────────
+.cc-toggle {
+  background: $bg-surface;
+  color: $cyan;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 2px 10px;
+  margin: 4px 2px;
+  font-size: 14px;
+  transition: all $transition;
+
+  &:hover {
+    background: $bg-hover;
+    border-color: $border-hi;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// CONTROL CENTER
+// ═══════════════════════════════════════════════════════════
+
+window.ControlCenter {
+  background: transparent;
+}
+
+.cc-panel {
+  background: $bg-base;
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 14px;
+  margin: 4px 8px;
+  min-width: 340px;
+  max-width: 380px;
+}
+
+// ── Header ──────────────────────────────────────────────────
+.cc-header {
+  margin-bottom: 4px;
+
+  .cc-title {
+    color: $cyan;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .cc-close {
+    background: transparent;
+    color: $text-muted;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 12px;
+    transition: all $transition;
+
+    &:hover {
+      background: $bg-hover;
+      color: $text;
+    }
+  }
+}
+
+// ── Row containers ──────────────────────────────────────────
+.cc-row {
+  background: $bg-surface;
+  border: 1px solid rgba(#1e293b, 0.6);
+  border-radius: $radius;
+  padding: 10px 12px;
+  margin: 2px 0;
+}
+
+.cc-divider {
+  min-height: 1px;
+  background: $border;
+  margin: 4px 8px;
+}
+
+// ── Icons and values ────────────────────────────────────────
+.cc-icon {
+  color: $cyan;
+  font-size: 16px;
+  min-width: 24px;
+}
+
+.cc-icon-btn {
+  background: transparent;
+  color: $cyan;
+  border: none;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-size: 16px;
+  min-width: 28px;
+  transition: all $transition;
+
+  &:hover {
+    background: $bg-hover;
+    color: $text;
+  }
+}
+
+.cc-value {
+  color: $text;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 70px;
+}
+
+.cc-action-btn {
+  background: $bg-raised;
+  color: $text-dim;
+  border: 1px solid rgba(#1e293b, 0.5);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all $transition;
+
+  &:hover {
+    background: $bg-hover;
+    color: $cyan;
+    border-color: $border;
+  }
+}
+
+// ── Chips (network, bluetooth, power profile) ───────────────
+.cc-chip {
+  background: $bg-raised;
+  color: $text;
+  border: 1px solid rgba(#1e293b, 0.5);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  transition: all $transition;
+
+  &:hover {
+    background: $bg-hover;
+    border-color: $border;
+    color: $cyan;
+  }
+}
+
+.power-profile {
+  font-size: 11px;
+}
+
+// ── Media row ───────────────────────────────────────────────
+.media-row {
+  .media-title {
+    color: $text;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .media-artist {
+    color: $text-dim;
+    font-size: 11px;
+    font-weight: 400;
+  }
+}
+
+// ── Shortcuts row ───────────────────────────────────────────
+.shortcuts {
+  background: transparent;
+  border: none;
+  padding: 4px 0;
+
+  .cc-shortcut-btn {
+    background: $bg-surface;
+    color: $text-dim;
+    border: 1px solid rgba(#1e293b, 0.5);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 16px;
+    transition: all $transition;
+
+    &:hover {
+      background: $bg-hover;
+      color: $cyan;
+      border-color: $border-hi;
+    }
+  }
+}
+
+// ── Battery states ──────────────────────────────────────────
+.battery-cc {
+  font-weight: 600;
+}

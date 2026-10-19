@@ -1,10 +1,22 @@
 // ╔══════════════════════════════════════════════════════════╗
 // ║           CYBERTUNG — ROFI CONFIG v6                    ║
-// ║           pywal auto-colors + cyber style               ║
+// ║           NEBULA CONTROL DECK · pywal auto-colors       ║
 // ╚══════════════════════════════════════════════════════════╝
 
-// ── IMPORT PYWAL COLORS ──────────────────────────────────────
+// ── IMPORT PYWAL COLORS (fallback: Nebula defaults below) ────
 @import "~/.cache/wal/colors-rofi-dark.rasi"
+
+// Nebula base overrides — pywal sets @background, @foreground, @color0-15.
+// These only apply when pywal values are too bright or missing contrast.
+* {
+    nebula-bg:       #0a0a12ee;
+    nebula-surface:  #12141fcc;
+    nebula-cyan:     #00e5ff;
+    nebula-violet:   #7c3aed;
+    nebula-dim:      #4a5568;
+    nebula-text:     #e2e8f0;
+    border-radius:   0px;
+}
 
 // ── MAIN CONFIG ──────────────────────────────────────────────
 configuration {
@@ -24,12 +36,12 @@ configuration {
 
 // ── WINDOW ───────────────────────────────────────────────────
 window {
-    width:            480px;
+    width:            520px;
     transparency:     "real";
-    background-color: @background;
-    border:           2px solid;
-    border-color:     @color4;
-    border-radius:    14px;
+    background-color: @nebula-bg;
+    border:           1px solid;
+    border-color:     @nebula-cyan;
+    border-radius:    16px;
     location:         center;
     x-offset:         0;
     y-offset:         -60px;
@@ -39,32 +51,34 @@ window {
 mainbox {
     children:         [ inputbar, listview, mode-switcher ];
     spacing:          0px;
-    padding:          12px;
+    padding:          16px;
     background-color: transparent;
 }
 
 // ── INPUTBAR ─────────────────────────────────────────────────
 inputbar {
     children:         [ prompt, entry ];
-    background-color: @color1;
-    border-radius:    10px;
-    padding:          8px 12px;
-    margin:           0px 0px 10px 0px;
-    spacing:          8px;
+    background-color: @nebula-surface;
+    border:           1px solid;
+    border-color:     #1e293b;
+    border-radius:    12px;
+    padding:          10px 16px;
+    margin:           0px 0px 12px 0px;
+    spacing:          10px;
 }
 
 prompt {
     background-color: transparent;
-    text-color:       @color4;
-    font:             "JetBrainsMono Nerd Font Bold 13";
+    text-color:       @nebula-cyan;
+    font:             "JetBrainsMono Nerd Font Bold 14";
     vertical-align:   0.5;
 }
 
 entry {
     background-color: transparent;
-    text-color:       @foreground;
-    placeholder:      "tìm app...";
-    placeholder-color: @color8;
+    text-color:       @nebula-text;
+    placeholder:      "search...";
+    placeholder-color: @nebula-dim;
     cursor:           text;
     vertical-align:   0.5;
 }
@@ -83,23 +97,28 @@ listview {
 
 // ── ELEMENT ──────────────────────────────────────────────────
 element {
-    padding:          8px 12px;
-    border-radius:    8px;
+    padding:          10px 14px;
+    border-radius:    10px;
     background-color: transparent;
     text-color:       @foreground;
-    spacing:          10px;
+    spacing:          12px;
     orientation:      horizontal;
 }
 
 element selected.normal {
-    background-color: @color2;
+    background-color: @nebula-surface;
+    text-color:       @nebula-text;
+    border:           0px 0px 0px 3px solid;
+    border-color:     @nebula-cyan;
+}
+
+element alternate.normal {
+    background-color: transparent;
     text-color:       @foreground;
-    border:           0px 0px 0px 2px solid;
-    border-color:     @color4;
 }
 
 element-icon {
-    size:             20px;
+    size:             22px;
     vertical-align:   0.5;
 }
 
@@ -113,17 +132,20 @@ element-text {
 mode-switcher {
     background-color: transparent;
     spacing:          6px;
-    margin:           8px 0px 0px 0px;
+    margin:           12px 0px 0px 0px;
 }
 
 button {
-    background-color: @color1;
-    text-color:       @color8;
-    border-radius:    8px;
-    padding:          4px 12px;
+    background-color: @nebula-surface;
+    text-color:       @nebula-dim;
+    border:           1px solid;
+    border-color:     #1e293b;
+    border-radius:    10px;
+    padding:          6px 14px;
 }
 
 button selected {
-    background-color: @color4;
-    text-color:       @background;
+    background-color: @nebula-violet;
+    text-color:       @nebula-text;
+    border-color:     @nebula-violet;
 }

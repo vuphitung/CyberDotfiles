@@ -7,8 +7,11 @@ D = os.path.expanduser("~/CyberDotfiles")
 
 FILES = {
     "Hyprland config":  "~/.config/hypr/hyprland.conf",
+    "Hyprlock config":  "~/.config/hypr/hyprlock.conf",
     "Wlogout layout":   "~/.config/wlogout/layout",
     "Wlogout style":    "~/.config/wlogout/style.css",
+    "SwayNC config":    "~/.config/swaync/config.json",
+    "AGS app entry":    "~/.config/ags/app.ts",
     "iwlwifi fix":      "/etc/modprobe.d/iwlwifi.conf",
 }
 SCRIPTS = {
@@ -20,10 +23,10 @@ SCRIPTS = {
 }
 APPS = [
     "hyprland", "hyprlock", "hypridle", "awww", "kitty", "rofi", "wlogout",
-    "wpctl", "pamixer", "playerctl", "brightnessctl", "grimblast",
+    "ags", "wpctl", "pamixer", "playerctl", "brightnessctl", "grimblast",
     "swaync", "notify-send", "nmcli", "wal", "sensors", "fcitx5",
 ]
-PROCS = {"awww/swww-daemon": "awww-daemon|swww-daemon", "swaync": "swaync",
+PROCS = {"awww/swww-daemon": "awww-daemon|swww-daemon", "ags": "ags", "swaync": "swaync",
          "hypridle": "hypridle", "fcitx5": "fcitx5", "polkit agent": "hyprpolkitagent|polkit-kde-authentication"}
 
 def chk_file(p): return os.path.exists(os.path.expanduser(p))

@@ -16,13 +16,15 @@ ln -sfn "$DOT/config/hypr"    "$HOME/.config/hypr"
 ln -sfn "$DOT/config/kitty"   "$HOME/.config/kitty"
 ln -sfn "$DOT/config/rofi"    "$HOME/.config/rofi"
 ln -sfn "$DOT/config/wlogout" "$HOME/.config/wlogout"
+ln -sfn "$DOT/config/swaync"  "$HOME/.config/swaync"
+ln -sfn "$DOT/config/ags"     "$HOME/.config/ags"
 
 echo "▸ TẠO thư mục nano + symlink nanorc..."
 mkdir -p "$HOME/.config/nano"
 ln -sf "$DOT/config/nano/nanorc" "$HOME/.config/nano/nanorc"
 
 echo "▸ KIỂM TRA kết quả:"
-for d in hypr kitty rofi wlogout; do
+for d in hypr kitty rofi wlogout swaync ags; do
     target=$(readlink "$HOME/.config/$d" 2>/dev/null)
     if [[ "$target" == "$DOT/config/$d" ]]; then
         echo "  ✅ ~/.config/$d -> $target"

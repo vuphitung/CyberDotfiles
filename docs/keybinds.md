@@ -18,7 +18,8 @@
 | Super + V | togglefloating |
 | Super + L | wlogout |
 | Super + P | hyprlock |
-| Super + I | swaync-client -t |
+| Super + I | swaync-client -t (thông báo) |
+| Super + B | ags toggle control-center (bảng điều khiển) |
 | Super + W | wall-picker.sh |
 | Super + F1 | keyhints.sh |
 | Super + Tab | workspace previous |

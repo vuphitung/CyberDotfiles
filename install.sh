@@ -71,7 +71,7 @@ sudo pacman -S --needed --noconfirm $PKGS || warn "pacman báo lỗi — kiểm 
 # Nếu máy đang bật tlp:  sudo systemctl disable --now tlp
 
 log "AUR"
-for p in grimblast-git; do aur "$p"; done
+for p in grimblast-git aylurs-gtk-shell-git; do aur "$p"; done
 
 # ── 2. SYMLINKS ──────────────────────────────────────────────
 log "SYMLINKS"
@@ -80,6 +80,8 @@ lnk "$D/config/hypr"    "$HOME/.config/hypr"
 lnk "$D/config/wlogout" "$HOME/.config/wlogout"
 lnk "$D/config/kitty"   "$HOME/.config/kitty"
 lnk "$D/config/rofi"    "$HOME/.config/rofi"
+lnk "$D/config/swaync"  "$HOME/.config/swaync"
+lnk "$D/config/ags"     "$HOME/.config/ags"
 
 # nano cần tạo thư mục trước
 mkdir -p "$HOME/.config/nano"

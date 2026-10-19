@@ -23,22 +23,29 @@ Sau đó:
 ```
 CyberDotfiles/
 ├── config/
+│   ├── ags/                ← Desktop bar + Control Center (TypeScript/GTK3)
 │   ├── hypr/
 │   │   ├── hyprland.conf   ← config chính, KHÔNG sửa trực tiếp
+│   │   ├── hypridle.conf   ← idle daemon (auto lock / suspend)
+│   │   ├── hyprlock.conf   ← lock screen Nebula theme
 │   │   └── user.conf       ← override cá nhân, sửa thoải mái
 │   ├── kitty/
 │   │   └── kitty.conf      ← terminal, tự đổi màu theo wallpaper
 │   ├── rofi/
-│   │   └── config.rasi     ← app launcher, tự đổi màu theo wallpaper
+│   │   └── config.rasi     ← app launcher Nebula cyber style
+│   ├── swaync/             ← notification center & popups
+│   │   ├── config.json
+│   │   └── style.css
 │   ├── nano/
 │   │   └── nanorc          ← syntax highlight + line numbers
-│   └── wlogout/            ← power menu
+│   └── wlogout/            ← power menu Nebula cyber style
 ├── shell/
 │   ├── aliases.sh          ← shortcuts tiện dụng
 │   └── starship.toml       ← prompt nhanh (<1ms)
 ├── scripts/
 │   ├── wallpaper.sh        ← awww + pywal, tự reload màu kitty
 │   ├── wall-picker.sh      ← TUI chọn ảnh (fzf + kitty icat)
+│   ├── perf-mode.sh        ← toggle chế độ tiết kiệm Intel iGPU
 │   ├── keyhints.sh         ← xem phím tắt
 │   ├── fix_symlinks.sh     ← sửa symlink nếu bị lỗi
 │   ├── iwlwifi-fix.sh      ← fix wifi Intel
@@ -59,6 +66,8 @@ CyberDotfiles/
 |---|---|
 | `hyprland` | Window manager |
 | `hyprlock` | Lock screen |
+| `hypridle` | Idle management daemon |
+| `aylurs-gtk-shell-git` | Desktop bar & Control Center (AGS v3, AUR) |
 | `awww` | Wallpaper daemon (hiệu ứng chuyển ảnh) |
 | `python-pywal` | Tự sinh màu theo wallpaper |
 | `kitty` | Terminal |
@@ -68,7 +77,7 @@ CyberDotfiles/
 | `grimblast-git` | Screenshot (AUR) |
 | `starship` | Prompt shell nhanh |
 | `fcitx5` | Input method (gõ tiếng Việt) |
-| `ttf-jetbrains-mono-nerd` | Font terminal |
+| `ttf-jetbrains-mono-nerd` | Font terminal & icons |
 
 ---
 
@@ -80,18 +89,21 @@ CyberDotfiles/
 | `Super + E` | File manager (nautilus) |
 | `Super + G` | Chrome |
 | `Super + Space` | App launcher (rofi) |
+| `Super + B` | Bảng điều khiển / Control Center (AGS) |
+| `Super + I` | Notifications (swaync) |
 | `Super + C` | Đóng cửa sổ |
 | `Super + F` | Fullscreen |
 | `Super + V` | Floating window |
 | `Super + L` | Power menu (wlogout) |
 | `Super + P` | Lock screen (hyprlock) |
-| `Super + I` | Notifications (swaync) |
 | `Super + W` | Chọn wallpaper |
 | `Super + F1` | Xem phím tắt |
 | `Super + R` | Resize mode |
 | `Super + Tab` | Workspace trước |
 | `Super + 1-6` | Chuyển workspace |
 | `Super + Shift + 1-6` | Chuyển window sang workspace |
+| `Super + Shift + V` | Lịch sử clipboard |
+| `Super + Shift + B` | Bật/tắt chế độ tiết kiệm pin (perf-mode) |
 | `Super + Shift + S` | Screenshot vùng chọn |
 | `Print` | Screenshot toàn màn hình |
 
@@ -122,6 +134,6 @@ Hệ thống dùng **pywal** để sinh màu từ wallpaper:
 - [x] Phase 0 — Cấu trúc chuẩn, install script
 - [x] Phase 1 — Kitty + Rofi + pywal integration
 - [x] Phase 2 — Performance tuning Intel iGPU
-- [ ] Phase 3 — AGS bar custom
-- [ ] Phase 4 — Hyprlock theme
-- [ ] Phase 5 — Settings panel
+- [x] Phase 3 — AGS bar + Control Center (Nebula Control Deck)
+- [x] Phase 4 — Hyprlock theme (Nebula orbital cybernetic)
+- [x] Phase 5 — Notification Center & Settings (SwayNC + AGS Control Center)
