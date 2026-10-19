@@ -9,4 +9,13 @@ app.start({
     app.get_monitors().map(Bar)
     ControlCenter()
   },
+  requestHandler(args, response) {
+    if (args[0] === "toggle-control-center") {
+      const win = app.get_window("control-center")
+      if (win) win.visible = !win.visible
+      response("ok")
+    } else {
+      response("running")
+    }
+  },
 })
