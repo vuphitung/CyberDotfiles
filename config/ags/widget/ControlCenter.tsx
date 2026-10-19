@@ -4,7 +4,7 @@
 import app from "ags/gtk3/app"
 import { Astal, Gtk, Gdk } from "ags/gtk3"
 import { execAsync } from "ags/process"
-import { createPoll, interval } from "ags/time"
+import { interval } from "ags/time"
 import {
   getVolume, getBrightness, getBattery, getNetwork,
   getBluetooth, getPowerProfile, getMediaPlayer, getCpuTemp,
@@ -12,6 +12,8 @@ import {
 
 // ── Volume slider row ───────────────────────────────────────
 function VolumeRow() {
+  let volLabel: Gtk.Label
+
   return (
     <box class="cc-row" spacing={12}>
       <button
@@ -28,12 +30,15 @@ function VolumeRow() {
       </button>
       <label
         class="cc-value"
-        setup={(self: Gtk.Label) => {
-          const update = () => getVolume().then(v => self.label = v)
+        label="󰕾 ?"
+        $={(self: Gtk.Label) => {
+          volLabel = self
+          const update = () => getVolume().then(v => {
+            if (volLabel) volLabel.set_text(v)
+          })
           update()
           interval(2000, update)
         }}
-        label=" ?"
       />
       <button
         class="cc-action-btn"
@@ -47,6 +52,8 @@ function VolumeRow() {
 
 // ── Brightness slider row ───────────────────────────────────
 function BrightnessRow() {
+  let briLabel: Gtk.Label
+
   return (
     <box class="cc-row" spacing={12}>
       <label class="cc-icon" label="󰃟" />
@@ -58,12 +65,15 @@ function BrightnessRow() {
       </button>
       <label
         class="cc-value"
-        setup={(self: Gtk.Label) => {
-          const update = () => getBrightness().then(v => self.label = v)
+        label="󰃟 ?"
+        $={(self: Gtk.Label) => {
+          briLabel = self
+          const update = () => getBrightness().then(v => {
+            if (briLabel) briLabel.set_text(v)
+          })
           update()
           interval(5000, update)
         }}
-        label="󰃟 ?"
       />
       <button
         class="cc-action-btn"
@@ -77,33 +87,36 @@ function BrightnessRow() {
 
 // ── Network + Bluetooth row ─────────────────────────────────
 function ConnectivityRow() {
+  let netLabel: Gtk.Label
+  let btLabel: Gtk.Label
+
   return (
     <box class="cc-row" spacing={12}>
       <button
         class="cc-chip"
         onClicked={() => execAsync("nm-connection-editor")}
-        setup={(self: Gtk.Button) => {
+        $={() => {
           const update = () => getNetwork().then(v => {
-            (self.get_child() as Gtk.Label).label = v
+            if (netLabel) netLabel.set_text(v)
           })
           update()
           interval(10000, update)
         }}
       >
-        <label label="󰤭 ?" />
+        <label label="󰤭 ?" $={(self: Gtk.Label) => { netLabel = self }} />
       </button>
       <button
         class="cc-chip"
         onClicked={() => execAsync("blueman-manager")}
-        setup={(self: Gtk.Button) => {
+        $={() => {
           const update = () => getBluetooth().then(v => {
-            (self.get_child() as Gtk.Label).label = v
+            if (btLabel) btLabel.set_text(v)
           })
           update()
           interval(10000, update)
         }}
       >
-        <label label="󰂲" />
+        <label label="󰂲" $={(self: Gtk.Label) => { btLabel = self }} />
       </button>
     </box>
   )
@@ -111,32 +124,37 @@ function ConnectivityRow() {
 
 // ── Battery + Power profile ─────────────────────────────────
 function PowerRow() {
+  let batLabel: Gtk.Label
+  let profLabel: Gtk.Label
+
   return (
     <box class="cc-row" spacing={12}>
       <label
         class="cc-value battery-cc"
-        setup={(self: Gtk.Label) => {
+        label="󰂑 ?"
+        $={(self: Gtk.Label) => {
+          batLabel = self
           const update = () => getBattery().then(b => {
-            if (b.pct < 0) { self.label = "No battery"; return }
-            self.label = `${b.icon} ${b.pct}%${b.charging ? " ⚡" : ""}`
+            if (!batLabel) return
+            if (b.pct < 0) { batLabel.set_text("No battery"); return }
+            batLabel.set_text(`${b.icon} ${b.pct}%${b.charging ? " ⚡" : ""}`)
           })
           update()
           interval(15000, update)
         }}
-        label="󰂑 ?"
       />
       <button
         class="cc-chip power-profile"
         onClicked={() => execAsync("bash -c \"P=$(powerprofilesctl get); case $P in balanced) powerprofilesctl set power-saver;; power-saver) powerprofilesctl set performance;; *) powerprofilesctl set balanced;; esac\"")}
-        setup={(self: Gtk.Button) => {
+        $={() => {
           const update = () => getPowerProfile().then(v => {
-            (self.get_child() as Gtk.Label).label = v
+            if (profLabel) profLabel.set_text(v)
           })
           update()
           interval(5000, update)
         }}
       >
-        <label label="?" />
+        <label label="?" $={(self: Gtk.Label) => { profLabel = self }} />
       </button>
     </box>
   )
@@ -144,26 +162,41 @@ function PowerRow() {
 
 // ── Media player ────────────────────────────────────────────
 function MediaRow() {
+  let mediaBox: Gtk.Box
+  let titleLabel: Gtk.Label
+  let artistLabel: Gtk.Label
+
   return (
     <box
       class="cc-row media-row"
       spacing={8}
-      setup={(self: Gtk.Box) => {
+      $={(self: Gtk.Box) => {
+        mediaBox = self
         const update = () => getMediaPlayer().then(m => {
-          self.visible = m !== null
+          if (!mediaBox) return
+          mediaBox.visible = m !== null
           if (!m) return
-          const children = self.get_children()
-          if (children.length >= 2) {
-            (children[0] as Gtk.Label).label = `♫ ${m.title}`
-            ;(children[1] as Gtk.Label).label = m.artist
-          }
+          if (titleLabel) titleLabel.set_text(`♫ ${m.title}`)
+          if (artistLabel) artistLabel.set_text(m.artist)
         })
         update()
         interval(3000, update)
       }}
     >
-      <label class="media-title" label="♫" truncate maxWidthChars={35} />
-      <label class="media-artist" label="" truncate maxWidthChars={25} />
+      <label
+        class="media-title"
+        label="♫"
+        truncate
+        maxWidthChars={35}
+        $={(self: Gtk.Label) => { titleLabel = self }}
+      />
+      <label
+        class="media-artist"
+        label=""
+        truncate
+        maxWidthChars={25}
+        $={(self: Gtk.Label) => { artistLabel = self }}
+      />
       <box spacing={4}>
         <button class="cc-action-btn" onClicked={() => execAsync("playerctl previous")}>
           <label label="󰒮" />
@@ -181,16 +214,21 @@ function MediaRow() {
 
 // ── System status row ───────────────────────────────────────
 function StatusRow() {
+  let tempLabel: Gtk.Label
+
   return (
     <box class="cc-row status-row" spacing={12}>
       <label
         class="cc-value"
-        setup={(self: Gtk.Label) => {
-          const update = () => getCpuTemp().then(v => self.label = v)
+        label=" ?"
+        $={(self: Gtk.Label) => {
+          tempLabel = self
+          const update = () => getCpuTemp().then(v => {
+            if (tempLabel) tempLabel.set_text(v)
+          })
           update()
           interval(10000, update)
         }}
-        label=" ?"
       />
     </box>
   )
@@ -233,11 +271,12 @@ export default function ControlCenter() {
       visible={false}
       layer={Astal.Layer.OVERLAY}
       keymode={Astal.Keymode.ON_DEMAND}
-      // Close on Escape
       onKeyPressEvent={(self: any, event: Gdk.Event) => {
-        if (event.get_keyval()[1] === Gdk.KEY_Escape) {
-          self.visible = false
-        }
+        try {
+          if (event.get_keyval()[1] === Gdk.KEY_Escape) {
+            self.visible = false
+          }
+        } catch { /* ignore */ }
       }}
     >
       <box class="cc-panel" vertical spacing={8}>

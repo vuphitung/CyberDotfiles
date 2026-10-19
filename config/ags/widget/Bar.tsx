@@ -8,6 +8,12 @@ import { createPoll, interval } from "ags/time"
 import Hyprland from "gi://AstalHyprland"
 import { getVolume, getBattery, getNetwork, getBrightness } from "../lib/system"
 
+function setClass(widget: Gtk.Widget, name: string, enable: boolean) {
+  const ctx = widget.get_style_context()
+  if (enable) ctx.add_class(name)
+  else ctx.remove_class(name)
+}
+
 // ── Workspaces ──────────────────────────────────────────────
 function Workspaces() {
   const hypr = Hyprland.get_default()
@@ -18,21 +24,25 @@ function Workspaces() {
         <button
           class="ws-btn"
           onClicked={() => hypr.dispatch("workspace", String(id))}
-          setup={(self: Gtk.Button) => {
+          $={(self: Gtk.Button) => {
             const update = () => {
-              const active = hypr.get_focused_workspace()?.get_id() === id
-              const occupied = hypr.get_workspaces().some(
-                (w: any) => w.get_id() === id && w.get_clients().length > 0
-              )
-              self.toggleClassName("active", active)
-              self.toggleClassName("occupied", occupied)
+              try {
+                const focused = hypr.get_focused_workspace()
+                const active = focused ? focused.get_id() === id : false
+                const workspaces = hypr.get_workspaces() || []
+                const occupied = workspaces.some(
+                  (w: any) => w.get_id() === id && (w.get_clients() || []).length > 0
+                )
+                setClass(self, "active", active)
+                setClass(self, "occupied", occupied)
+              } catch (e) {
+                console.error(e)
+              }
             }
             update()
             hypr.connect("notify::focused-workspace", update)
-            hypr.connect("workspace-added", update)
-            hypr.connect("workspace-removed", update)
-            hypr.connect("client-added", update)
-            hypr.connect("client-removed", update)
+            hypr.connect("notify::workspaces", update)
+            hypr.connect("notify::clients", update)
           }}
         >
           <label label={String(id)} />
@@ -52,10 +62,14 @@ function ActiveWindow() {
         class="win-title"
         truncate
         maxWidthChars={50}
-        setup={(self: Gtk.Label) => {
+        $={(self: Gtk.Label) => {
           const update = () => {
-            const client = hypr.get_focused_client()
-            self.label = client?.get_title() || ""
+            try {
+              const client = hypr.get_focused_client()
+              self.set_text(client ? client.get_title() || "" : "")
+            } catch {
+              self.set_text("")
+            }
           }
           update()
           hypr.connect("notify::focused-client", update)
@@ -86,71 +100,76 @@ function Clock() {
 
 // ── System tray module with polling ─────────────────────────
 function SysTray() {
+  let volLabel: Gtk.Label
+  let briLabel: Gtk.Label
+  let netLabel: Gtk.Label
+  let batLabel: Gtk.Label
+
   return (
     <box class="systray" spacing={2}>
       {/* Volume */}
       <button
         class="sys-btn"
         onClicked={() => execAsync("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle")}
-        setup={(self: Gtk.Button) => {
+        $={() => {
           const update = () => getVolume().then(v => {
-            (self.get_child() as Gtk.Label).label = v
+            if (volLabel) volLabel.set_text(v)
           })
           update()
           interval(3000, update)
         }}
       >
-        <label label="󰕾 ?" />
+        <label label="󰕾 ?" $={(self: Gtk.Label) => { volLabel = self }} />
       </button>
 
       {/* Brightness */}
       <button
         class="sys-btn"
-        setup={(self: Gtk.Button) => {
+        $={() => {
           const update = () => getBrightness().then(v => {
-            (self.get_child() as Gtk.Label).label = v
+            if (briLabel) briLabel.set_text(v)
           })
           update()
           interval(5000, update)
         }}
       >
-        <label label="󰃟 ?" />
+        <label label="󰃟 ?" $={(self: Gtk.Label) => { briLabel = self }} />
       </button>
 
       {/* Network */}
       <button
         class="sys-btn"
         onClicked={() => execAsync("nm-connection-editor")}
-        setup={(self: Gtk.Button) => {
+        $={() => {
           const update = () => getNetwork().then(v => {
-            (self.get_child() as Gtk.Label).label = v
+            if (netLabel) netLabel.set_text(v)
           })
           update()
           interval(10000, update)
         }}
       >
-        <label label="󰤭 ?" />
+        <label label="󰤭 ?" $={(self: Gtk.Label) => { netLabel = self }} />
       </button>
 
       {/* Battery */}
       <button
         class="sys-btn battery"
-        setup={(self: Gtk.Button) => {
+        $={(self: Gtk.Button) => {
           const update = () => getBattery().then(b => {
             if (b.pct < 0) {
               self.visible = false
               return
             }
             self.visible = true
-            ;(self.get_child() as Gtk.Label).label = `${b.icon} ${b.pct}%`
-            self.toggleClassName("low", b.pct <= 15)
-            self.toggleClassName("charging", b.charging)
+            if (batLabel) batLabel.set_text(`${b.icon} ${b.pct}%`)
+            setClass(self, "low", b.pct <= 15)
+            setClass(self, "charging", b.charging)
           })
           update()
           interval(15000, update)
         }}
       >
-        <label label="󰂑 ?" />
+        <label label="󰂑 ?" $={(self: Gtk.Label) => { batLabel = self }} />
       </button>
     </box>
   )
