@@ -10,12 +10,17 @@ app.start({
     ControlCenter()
   },
   requestHandler(args, response) {
-    if (args[0] === "toggle-control-center") {
+    const cmd = args.join(" ")
+    if (cmd.includes("control-center")) {
       const win = app.get_window("control-center")
-      if (win) win.visible = !win.visible
-      response("ok")
-    } else {
-      response("running")
+      if (win) {
+        win.visible = !win.visible
+        response(win.visible ? "opened" : "closed")
+        return
+      }
+      response("window-not-found")
+      return
     }
+    response("ok")
   },
 })
