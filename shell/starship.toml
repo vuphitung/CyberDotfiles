@@ -4,7 +4,7 @@ command_timeout = 500
 
 # Chỉ hiện những gì cần thiết
 format = """
-$directory$git_branch$git_status$python$nodejs$rust$cmd_duration
+$directory$git_branch$git_status$python$cmd_duration
 $character"""
 
 [directory]

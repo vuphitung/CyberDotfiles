@@ -1,5 +1,7 @@
 # Keybinds — CyberTung
 
+> Danh sách đầy đủ và luôn cập nhật: nhấn `Super + F1` trong Hyprland.
+
 ## Apps
 | Phím | Lệnh |
 |---|---|
@@ -21,6 +23,8 @@
 | Super + F1 | keyhints.sh |
 | Super + Tab | workspace previous |
 | Super + R | submap resize |
+| Super + Shift + V | cliphist (clipboard history) |
+| Super + Shift + B | perf-mode.sh (tiết kiệm pin) |
 
 ## Workspaces
 | Phím | Lệnh |

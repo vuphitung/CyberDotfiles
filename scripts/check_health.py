@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# check_health.py — CyberTung System Health Check v5
+# check_health.py — CyberTung System Health Check v6
 
 import glob, os, re, shutil, subprocess
 

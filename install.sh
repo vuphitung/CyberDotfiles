@@ -1,6 +1,6 @@
 #!/bin/bash
 # ╔══════════════════════════════════════════════════════════╗
-# ║         CyberTung Dotfiles — install.sh v5              ║
+# ║         CyberTung Dotfiles — install.sh v6              ║
 # ║         Arch Linux + Hyprland                           ║
 # ╚══════════════════════════════════════════════════════════╝
 set -e

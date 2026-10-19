@@ -17,7 +17,7 @@ echo -e "\n${BLUE}  → Power management${NC}"
 CONFLICTS=("auto-cpufreq" "thermald")
 for app in "${CONFLICTS[@]}"; do
     if systemctl is-active --quiet "$app" 2>/dev/null; then
-        echo -e "  ${YELLOW}⚠️  $app đang chạy — conflict với tlp${NC}"
+        echo -e "  ${YELLOW}⚠️  $app đang chạy — conflict với power-profiles-daemon${NC}"
         echo -e "  ${YELLOW}   Tắt thủ công: sudo systemctl disable --now $app${NC}"
     fi
 done

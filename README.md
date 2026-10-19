@@ -1,4 +1,4 @@
-# CyberTung Dotfiles v5
+# CyberTung Dotfiles v6
 
 Dotfiles cá nhân — Arch Linux + Hyprland.  
 Tối ưu cho **Intel iGPU**, laptop **2560x1440@60Hz**.
@@ -37,7 +37,7 @@ CyberDotfiles/
 │   ├── aliases.sh          ← shortcuts tiện dụng
 │   └── starship.toml       ← prompt nhanh (<1ms)
 ├── scripts/
-│   ├── wallpaper.sh        ← swww + pywal, tự reload màu kitty
+│   ├── wallpaper.sh        ← awww + pywal, tự reload màu kitty
 │   ├── wall-picker.sh      ← TUI chọn ảnh (fzf + kitty icat)
 │   ├── keyhints.sh         ← xem phím tắt
 │   ├── fix_symlinks.sh     ← sửa symlink nếu bị lỗi
@@ -59,7 +59,7 @@ CyberDotfiles/
 |---|---|
 | `hyprland` | Window manager |
 | `hyprlock` | Lock screen |
-| `swww` | Wallpaper daemon (hiệu ứng chuyển ảnh) |
+| `awww` | Wallpaper daemon (hiệu ứng chuyển ảnh) |
 | `python-pywal` | Tự sinh màu theo wallpaper |
 | `kitty` | Terminal |
 | `rofi` | App launcher |
