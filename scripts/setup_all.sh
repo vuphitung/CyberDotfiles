@@ -14,7 +14,7 @@ echo -e "${BLUE}  🛡️  CYBER-AUDITOR: KIỂM TRA HỆ THỐNG${NC}"
 
 # ── 1. Xung đột power management ──────────────────────────
 echo -e "\n${BLUE}  → Power management${NC}"
-CONFLICTS=("auto-cpufreq" "thermald")
+CONFLICTS=("auto-cpufreq" "tlp")
 for app in "${CONFLICTS[@]}"; do
     if systemctl is-active --quiet "$app" 2>/dev/null; then
         echo -e "  ${YELLOW}⚠️  $app đang chạy — conflict với power-profiles-daemon${NC}"
@@ -28,7 +28,7 @@ echo -e "\n${BLUE}  → Intel GPU driver${NC}"
 if lspci 2>/dev/null | grep -iq intel; then
     if ! pacman -Qs intel-media-driver &>/dev/null; then
         echo -e "  ${YELLOW}⏳ Cài Intel Media Driver...${NC}"
-        sudo pacman -S --needed --noconfirm intel-media-driver libva-intel-driver &>/dev/null
+        sudo pacman -S --needed --noconfirm intel-media-driver &>/dev/null
     fi
     echo -e "  ${GREEN}✅ Intel driver ok${NC}"
 fi

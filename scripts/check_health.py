@@ -125,6 +125,13 @@ def chk_system_extra():
     bat = sh("cat /sys/class/power_supply/BAT*/status 2>/dev/null")
     if prof == "performance" and "Discharging" in bat:
         print("    ⚠️  Đang chạy bằng pin nhưng profile = performance → powerprofilesctl set balanced"); n += 1
+    if prof == "power-saver" and "Discharging" not in bat:
+        print("    ❌ Đang cắm sạc mà profile = power-saver → CPU bị kìm xung nhịp (Chrome lag). powerprofilesctl set performance"); n += 1
+    epp = sh("cat /sys/devices/system/cpu/cpu0/cpufreq/energy_performance_preference 2>/dev/null")
+    if prof == "power-saver" and epp:
+        print(f"    ⚠️  power-saver (EPP={epp}) giữ CPU ~800MHz — máy 2 nhân sẽ lag khi dùng Chrome"); n += 1
+    if not sh("pgrep -f power-auto.sh"):
+        print("    ⚠️  power-auto.sh không chạy (profile không tự đổi theo nguồn điện)"); n += 1
     cores = sh("coredumpctl list --since '-7 days' --no-pager 2>/dev/null | grep -c python")
     if cores and cores != "0":
         print(f"    ⚠️  {cores} crash python trong 7 ngày → coredumpctl info <PID>"); n += 1

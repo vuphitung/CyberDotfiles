@@ -58,20 +58,27 @@ PKGS="hyprland hyprlock hypridle hyprpolkitagent awww python-pywal \
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk wl-clipboard cliphist \
   kitty rofi wlogout nautilus \
   pipewire pipewire-pulse wireplumber pamixer playerctl brightnessctl \
-  swaynotificationcenter libnotify \
+  swaync libnotify \
   networkmanager nm-connection-editor blueman \
   power-profiles-daemon lm_sensors \
+  intel-media-driver vulkan-intel libva-utils mesa-utils \
   imagemagick fzf jq bat btop \
   ttf-jetbrains-mono-nerd noto-fonts-emoji papirus-icon-theme breeze \
   fcitx5 fcitx5-gtk fcitx5-qt fcitx5-unikey \
   starship nano zsh"
 # Một lệnh pacman duy nhất (nhanh hơn, và HIỆN lỗi thay vì nuốt vào /dev/null)
-sudo pacman -S --needed --noconfirm $PKGS || warn "pacman báo lỗi — kiểm tra phía trên"
+# Tách gói: có trong repo chính thức -> pacman; không có (vd python-pywal, wlogout) -> AUR.
+# Nếu gộp chung, 1 gói "target not found" sẽ làm pacman HỦY CẢ LỆNH (không cài gì).
+OFFICIAL=""; AURLIST=""
+for p in $PKGS; do
+    if pacman -Si "$p" &>/dev/null; then OFFICIAL="$OFFICIAL $p"; else AURLIST="$AURLIST $p"; fi
+done
+sudo pacman -S --needed --noconfirm $OFFICIAL || warn "pacman báo lỗi — kiểm tra phía trên"
 # Lưu ý: tlp đã bị bỏ vì xung đột power-profiles-daemon.
 # Nếu máy đang bật tlp:  sudo systemctl disable --now tlp
 
 log "AUR"
-for p in grimblast-git aylurs-gtk-shell-git; do aur "$p"; done
+for p in $AURLIST grimblast-git aylurs-gtk-shell-git; do aur "$p"; done
 
 # ── 2. SYMLINKS ──────────────────────────────────────────────
 log "SYMLINKS"
@@ -143,6 +150,9 @@ NM
         ok "WiFi fix đã có"
     fi
 fi
+
+# swaync khởi động bằng exec-once trong hyprland.conf -> tắt unit systemd để khỏi đạp nhau
+systemctl --user disable swaync.service 2>/dev/null
 
 # ── 7. WALLPAPER ─────────────────────────────────────────────
 log "WALLPAPER"
