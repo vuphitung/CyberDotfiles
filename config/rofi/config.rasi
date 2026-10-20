@@ -1,53 +1,36 @@
 // ╔══════════════════════════════════════════════════════════╗
-// ║           CYBERTUNG — ROFI CONFIG v6                    ║
-// ║           NEBULA CONTROL DECK · pywal auto-colors       ║
+// ║  ROFI — SAKURA GLASS                                     ║
+// ║  Màu từ tokens.rasi (sinh từ themes/sakura-glass.json)   ║
 // ╚══════════════════════════════════════════════════════════╝
+// Kính mờ: layerrule "rofi" trong hyprland.conf (blur + ignore_alpha).
 
-// ── IMPORT PYWAL COLORS (fallback: Nebula defaults below) ────
-@import "~/.cache/wal/colors-rofi-dark.rasi"
+@import "~/.config/rofi/tokens.rasi"
 
-// Nebula base overrides — pywal sets @background, @foreground, @color0-15.
-// These only apply when pywal values are too bright or missing contrast.
-* {
-    nebula-bg:       #0a0a12ee;
-    nebula-surface:  #12141fcc;
-    nebula-cyan:     #00e5ff;
-    nebula-violet:   #7c3aed;
-    nebula-dim:      #4a5568;
-    nebula-text:     #e2e8f0;
-    border-radius:   0px;
-}
-
-// ── MAIN CONFIG ──────────────────────────────────────────────
 configuration {
     modi:                   "drun,run,window";
     show-icons:             true;
     icon-theme:             "Papirus-Dark";
-    display-drun:           " Apps";
-    display-run:            " Run";
-    display-window:         " Windows";
+    display-drun:           "Apps";
+    display-run:            "Run";
+    display-window:         "Windows";
     drun-display-format:    "{name}";
-    font:                   "JetBrainsMono Nerd Font 12";
+    font:                   "Inter 12";
     terminal:               "kitty";
-    ssh-client:             "ssh";
     cycle:                  true;
     sidebar-mode:           true;
 }
 
-// ── WINDOW ───────────────────────────────────────────────────
 window {
-    width:            520px;
+    width:            560px;
     transparency:     "real";
-    background-color: @nebula-bg;
-    border:           1px solid;
-    border-color:     @nebula-cyan;
-    border-radius:    16px;
     location:         center;
-    x-offset:         0;
     y-offset:         -60px;
+    background-color: @glass-strong;
+    border:           1px solid;
+    border-color:     @specular;
+    border-radius:    20px;
 }
 
-// ── MAINBOX ──────────────────────────────────────────────────
 mainbox {
     children:         [ inputbar, listview, mode-switcher ];
     spacing:          0px;
@@ -55,35 +38,30 @@ mainbox {
     background-color: transparent;
 }
 
-// ── INPUTBAR ─────────────────────────────────────────────────
 inputbar {
     children:         [ prompt, entry ];
-    background-color: @nebula-surface;
-    border:           1px solid;
-    border-color:     #1e293b;
-    border-radius:    12px;
-    padding:          10px 16px;
+    background-color: @glass-hi;
+    border-radius:    14px;
+    padding:          12px 16px;
     margin:           0px 0px 12px 0px;
     spacing:          10px;
 }
 
 prompt {
     background-color: transparent;
-    text-color:       @nebula-cyan;
-    font:             "JetBrainsMono Nerd Font Bold 14";
+    text-color:       @pink;
     vertical-align:   0.5;
 }
 
 entry {
-    background-color: transparent;
-    text-color:       @nebula-text;
-    placeholder:      "search...";
-    placeholder-color: @nebula-dim;
-    cursor:           text;
-    vertical-align:   0.5;
+    background-color:  transparent;
+    text-color:        @text;
+    placeholder:       "Tìm kiếm...";
+    placeholder-color: @text-muted;
+    cursor:            text;
+    vertical-align:    0.5;
 }
 
-// ── LISTVIEW ─────────────────────────────────────────────────
 listview {
     lines:            8;
     columns:          1;
@@ -95,30 +73,22 @@ listview {
     fixed-height:     false;
 }
 
-// ── ELEMENT ──────────────────────────────────────────────────
 element {
     padding:          10px 14px;
-    border-radius:    10px;
+    border-radius:    12px;
     background-color: transparent;
-    text-color:       @foreground;
+    text-color:       @text;
     spacing:          12px;
     orientation:      horizontal;
 }
 
 element selected.normal {
-    background-color: @nebula-surface;
-    text-color:       @nebula-text;
-    border:           0px 0px 0px 3px solid;
-    border-color:     @nebula-cyan;
-}
-
-element alternate.normal {
-    background-color: transparent;
-    text-color:       @foreground;
+    background-color: @pink-soft;
+    text-color:       @text;
 }
 
 element-icon {
-    size:             22px;
+    size:             24px;
     vertical-align:   0.5;
 }
 
@@ -128,7 +98,6 @@ element-text {
     text-color:       inherit;
 }
 
-// ── MODE SWITCHER ─────────────────────────────────────────────
 mode-switcher {
     background-color: transparent;
     spacing:          6px;
@@ -136,16 +105,13 @@ mode-switcher {
 }
 
 button {
-    background-color: @nebula-surface;
-    text-color:       @nebula-dim;
-    border:           1px solid;
-    border-color:     #1e293b;
-    border-radius:    10px;
-    padding:          6px 14px;
+    background-color: @glass-hi;
+    text-color:       @text-muted;
+    border-radius:    12px;
+    padding:          8px 14px;
 }
 
 button selected {
-    background-color: @nebula-violet;
-    text-color:       @nebula-text;
-    border-color:     @nebula-violet;
+    background-color: @pink-soft;
+    text-color:       @pink;
 }

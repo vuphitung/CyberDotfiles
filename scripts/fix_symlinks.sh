@@ -10,6 +10,7 @@ rm -f "$DOT/config/hypr/hypr"
 rm -f "$DOT/config/kitty/kitty"
 rm -f "$DOT/config/rofi/rofi"
 rm -f "$DOT/config/wlogout/wlogout"
+rm -f "$DOT/config/waybar/waybar"
 
 echo "▸ TẠO symlink đúng vào ~/.config/..."
 ln -sfn "$DOT/config/hypr"    "$HOME/.config/hypr"
@@ -17,14 +18,15 @@ ln -sfn "$DOT/config/kitty"   "$HOME/.config/kitty"
 ln -sfn "$DOT/config/rofi"    "$HOME/.config/rofi"
 ln -sfn "$DOT/config/wlogout" "$HOME/.config/wlogout"
 ln -sfn "$DOT/config/swaync"  "$HOME/.config/swaync"
-ln -sfn "$DOT/config/ags"     "$HOME/.config/ags"
+ln -sfn "$DOT/config/waybar"  "$HOME/.config/waybar"
+[ -L "$HOME/.config/ags" ] && rm -f "$HOME/.config/ags"   # AGS đã bỏ
 
 echo "▸ TẠO thư mục nano + symlink nanorc..."
 mkdir -p "$HOME/.config/nano"
 ln -sf "$DOT/config/nano/nanorc" "$HOME/.config/nano/nanorc"
 
 echo "▸ KIỂM TRA kết quả:"
-for d in hypr kitty rofi wlogout swaync ags; do
+for d in hypr kitty rofi wlogout swaync waybar; do
     target=$(readlink "$HOME/.config/$d" 2>/dev/null)
     if [[ "$target" == "$DOT/config/$d" ]]; then
         echo "  ✅ ~/.config/$d -> $target"

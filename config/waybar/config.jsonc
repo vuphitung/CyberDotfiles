@@ -1,0 +1,120 @@
+// ╔══════════════════════════════════════════════════════════╗
+// ║  WAYBAR — SAKURA GLASS · 3 đảo nổi (floating islands)    ║
+// ╚══════════════════════════════════════════════════════════╝
+// Nguyên tắc nhẹ máy (i7-6600U / HD 520): chỉ dùng module NATIVE
+// (nghe sự kiện hệ thống, không fork tiến trình định kỳ). Chỉ có MỘT
+// tiến trình phụ chạy nền duy nhất: `swaync-client -swb` (nghe sự kiện).
+{
+  "layer": "top",
+  "position": "top",
+  "height": 36,
+  "margin-top": 8,
+  "margin-left": 12,
+  "margin-right": 12,
+  "spacing": 0,
+  "exclusive": true,
+  "reload_style_on_change": true,   // sửa style.css là bar tự cập nhật
+
+  "modules-left":   ["custom/launcher", "hyprland/workspaces"],
+  "modules-center": ["clock", "mpris"],
+  "modules-right":  ["power-profiles-daemon", "network", "pulseaudio", "backlight", "battery", "custom/notification", "custom/power"],
+
+  // ── ĐẢO TRÁI ──────────────────────────────────────────────
+  "custom/launcher": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "rofi -show drun"
+  },
+
+  // Chấm tròn 6px; workspace active kéo dài thành viên thuốc 24px (xem style.css)
+  "hyprland/workspaces": {
+    "format": "",
+    "on-click": "activate",
+    "persistent-workspaces": { "*": 6 }
+  },
+
+  // ── ĐẢO GIỮA ──────────────────────────────────────────────
+  "clock": {
+    "format": "{:%a %d %b  •  %H:%M}",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": { "mode": "month", "format": { "today": "<span color='#ffb7c5'><b>{}</b></span>" } },
+    "on-click": "swaync-client -t -sw"
+  },
+
+  // Tự ẩn khi không có trình phát nhạc
+  "mpris": {
+    "format": "{status_icon} {dynamic}",
+    "status-icons": { "playing": "", "paused": "" },
+    "dynamic-order": ["title", "artist"],
+    "dynamic-len": 34,
+    "tooltip": false
+  },
+
+  // ── ĐẢO PHẢI (control center) ─────────────────────────────
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+    "format-icons": { "default": "󰾆", "performance": "󱐋", "balanced": "󰾆", "power-saver": "󰌪" }
+  },
+
+  "network": {
+    "format-wifi": "󰤨",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰤭",
+    "tooltip-format-wifi": "{essid}  ·  {signalStrength}%\n{ipaddr}",
+    "tooltip-format-ethernet": "{ifname}\n{ipaddr}",
+    "tooltip-format-disconnected": "Offline",
+    "on-click": "nm-connection-editor"
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟  mute",
+    "format-icons": { "default": ["󰕿", "󰖀", "󰕾"] },
+    "scroll-step": 5,
+    "tooltip-format": "{desc}",
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+  },
+
+  "backlight": {
+    "format": "{icon} {percent}%",
+    "format-icons": ["󰃞", "󰃟", "󰃠"],
+    "on-scroll-up": "brightnessctl set 5%+",
+    "on-scroll-down": "brightnessctl set 5%-"
+  },
+
+  "battery": {
+    "interval": 30,
+    "states": { "warning": 30, "critical": 15 },
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰂄 {capacity}%",
+    "format-full": "󰁹 {capacity}%",
+    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    "tooltip-format": "{timeTo}  ·  {power:.1f} W"
+  },
+
+  // swaync: `-swb` là luồng sự kiện (không polling)
+  "custom/notification": {
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "", "none": "",
+      "dnd-notification": "", "dnd-none": "",
+      "inhibited-notification": "", "inhibited-none": "",
+      "dnd-inhibited-notification": "", "dnd-inhibited-none": ""
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true,
+    "tooltip": false
+  },
+
+  "custom/power": {
+    "format": "",
+    "tooltip": false,
+    "on-click": "wlogout"
+  }
+}

@@ -1,0 +1,13 @@
+/* GENERATED từ themes/sakura-glass.json bởi scripts/theme-gen.py — ĐỪNG SỬA TAY */
+@define-color glass rgba(24,24,32,0.5);
+@define-color glass-strong rgba(24,24,32,0.72);
+@define-color glass-hi rgba(255,255,255,0.12);
+@define-color specular rgba(255,255,255,0.18);
+@define-color text rgb(245,245,247);
+@define-color text-muted rgba(245,245,247,0.55);
+@define-color pink rgb(255,183,197);
+@define-color pink-soft rgba(255,183,197,0.2);
+@define-color green rgb(52,199,89);
+@define-color amber rgb(255,214,10);
+@define-color red rgb(255,69,58);
+@define-color shadow rgba(0,0,0,0.25);

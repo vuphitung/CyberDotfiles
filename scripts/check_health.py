@@ -11,7 +11,9 @@ FILES = {
     "Wlogout layout":   "~/.config/wlogout/layout",
     "Wlogout style":    "~/.config/wlogout/style.css",
     "SwayNC config":    "~/.config/swaync/config.json",
-    "AGS app entry":    "~/.config/ags/app.ts",
+    "Waybar config":    "~/.config/waybar/config.jsonc",
+    "Waybar style":     "~/.config/waybar/style.css",
+    "Theme tokens":     "~/.config/waybar/tokens.css",
     "iwlwifi fix":      "/etc/modprobe.d/iwlwifi.conf",
 }
 SCRIPTS = {
@@ -23,10 +25,10 @@ SCRIPTS = {
 }
 APPS = [
     "hyprland", "hyprlock", "hypridle", "awww", "kitty", "rofi", "wlogout",
-    "ags", "wpctl", "pamixer", "playerctl", "brightnessctl", "grimblast",
+    "waybar", "wpctl", "pamixer", "playerctl", "brightnessctl", "grimblast",
     "swaync", "notify-send", "nmcli", "wal", "sensors", "fcitx5",
 ]
-PROCS = {"awww/swww-daemon": "awww-daemon|swww-daemon", "ags": "ags", "swaync": "swaync",
+PROCS = {"awww/swww-daemon": "awww-daemon|swww-daemon", "waybar": "waybar", "swaync": "swaync",
          "hypridle": "hypridle", "fcitx5": "fcitx5", "polkit agent": "hyprpolkitagent|polkit-kde-authentication"}
 
 def chk_file(p): return os.path.exists(os.path.expanduser(p))

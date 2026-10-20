@@ -1,297 +1,136 @@
-/* ============================================================
- * CYBERTUNG // NEBULA CONTROL DECK — SwayNC Theme
- * Target: swaync 0.12.x, GTK CSS
- * ============================================================ */
+/* SWAYNC — SAKURA GLASS (màu từ tokens.css) */
+@import "tokens.css";
 
-/* --- Palette ------------------------------------------------ */
-@define-color bg_base    #0a0a12;
-@define-color bg_surface #12141f;
-@define-color bg_raised  #1a1c2e;
-@define-color bg_hover   #222440;
-@define-color cyan       #00e5ff;
-@define-color violet     #7c3aed;
-@define-color pink       #f472b6;
-@define-color amber      #f59e0b;
-@define-color red        #ef4444;
-@define-color text       #e2e8f0;
-@define-color text_dim   #94a3b8;
-@define-color border     alpha(#00e5ff, 0.25);
-@define-color border_hi  alpha(#00e5ff, 0.5);
-
-/* --- Global ------------------------------------------------- */
 * {
-  font-family: "JetBrainsMono Nerd Font", monospace;
-  font-size: 14px;
-  color: @text;
+    font-family: "Inter", "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background 200ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* === NOTIFICATION POPUPS ==================================== */
+/* ── THÔNG BÁO ──────────────────────────────────────────── */
+.notification-row { outline: none; padding: 4px 6px; }
 
-/* Outer row wrapper — transparent so border shows on .notification */
-.notification-row {
-  outline: none;
-  padding: 0;
-  margin: 4px 0;
-}
-
-.notification-row:focus,
-.notification-row:hover {
-  background: transparent;
-}
-
-/* The notification card itself */
 .notification {
-  background: @bg_surface;
-  border: 1px solid @border;
-  border-radius: 12px;
-  padding: 0;
-  margin: 0 8px;
+    background: @glass-strong;
+    border: 1px solid @specular;
+    border-radius: 16px;
+    margin: 4px 0;
+    padding: 0;
 }
 
-.notification:hover {
-  border-color: @border_hi;
-}
+.notification-content { background: transparent; padding: 10px 12px; border-radius: 16px; }
+.notification-default-action { border-radius: 16px; color: @text; }
+.notification-default-action:hover { background: @glass-hi; }
 
-/* Content area inside the notification */
-.notification-content {
-  padding: 12px 14px;
-  border-radius: 12px;
-}
+.summary { color: @text;       font-size: 14px; font-weight: 700; }
+.body    { color: @text-muted; font-size: 13px; }
+.time    { color: @text-muted; font-size: 11px; }
 
-/* Default action wrapper (clickable area) */
-.notification-default-action {
-  background: transparent;
-  border-radius: 12px;
-  padding: 0;
-  margin: 0;
-}
+.notification-content .image { border-radius: 10px; }
 
-.notification-default-action:hover {
-  background: @bg_hover;
-  border-radius: 12px;
-}
-
-/* --- Title / Body / Time ------------------------------------ */
-.summary {
-  font-size: 14px;
-  font-weight: 700;
-  color: #f1f5f9;
-  margin-bottom: 2px;
-}
-
-.body {
-  font-size: 13px;
-  font-weight: 400;
-  color: @text_dim;
-}
-
-.time {
-  font-size: 11px;
-  font-weight: 400;
-  color: @text_dim;
-  margin-right: 4px;
-}
-
-/* --- App icon ----------------------------------------------- */
-.notification-content .image {
-  margin-right: 10px;
-}
-
-/* --- Close button ------------------------------------------- */
 .close-button {
-  background: alpha(@bg_raised, 0.8);
-  color: @text_dim;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  padding: 2px;
-  margin: 6px 6px 0 0;
-  min-width: 24px;
-  min-height: 24px;
+    background: @glass-hi;
+    color: @text;
+    border-radius: 99px;
+    min-width: 22px;
+    min-height: 22px;
+    margin: 6px;
+    padding: 0;
 }
+.close-button:hover { background: alpha(@red, 0.45); }
 
-.close-button:hover {
-  background: @bg_hover;
-  color: @cyan;
-  border-color: @border;
-}
-
-/* --- Action buttons (inline reply, open, etc.) -------------- */
 .notification-action {
-  background: @bg_raised;
-  border: 1px solid @border;
-  border-radius: 8px;
-  padding: 6px 12px;
-  margin: 4px 2px 8px;
-  color: @text;
-  font-size: 12px;
-  font-weight: 600;
+    background: @glass-hi;
+    color: @text;
+    border-radius: 10px;
+    margin: 4px;
+    padding: 6px;
 }
+.notification-action:hover { background: @pink-soft; color: @pink; }
 
-.notification-action:hover {
-  background: @bg_hover;
-  border-color: @cyan;
-  color: @cyan;
-}
+.low .summary      { color: @text-muted; }
+.critical          { border-color: @red; }
+.critical .summary { color: @red; }
 
-.notification-action:first-child {
-  margin-left: 8px;
-}
-
-.notification-action:last-child {
-  margin-right: 8px;
-}
-
-/* --- Urgency levels ----------------------------------------- */
-
-/* Low priority — dimmer */
-.low {
-  border-color: alpha(#94a3b8, 0.15);
-}
-
-.low .summary {
-  color: @text_dim;
-}
-
-/* Critical — amber border, red on extreme */
-.critical {
-  border-color: alpha(@amber, 0.5);
-}
-
-.critical:hover {
-  border-color: @amber;
-}
-
-.critical .summary {
-  color: @amber;
-  font-weight: 800;
-}
-
-/* === CONTROL CENTER PANEL =================================== */
-
+/* ── CONTROL CENTER ─────────────────────────────────────── */
 .control-center {
-  background: @bg_base;
-  border: 1px solid @border;
-  border-radius: 14px;
-  padding: 12px;
-  margin: 8px;
+    background: @glass-strong;
+    border: 1px solid @specular;
+    border-radius: 20px;
+    padding: 6px;
 }
-
-/* Scrollable notification list */
-.control-center-list {
-  background: transparent;
-  border-radius: 10px;
-}
-
-/* Notifications inside the control center reuse .notification styles above.
-   Tighten spacing so the list is scannable. */
-.control-center .notification-row {
-  margin: 3px 0;
-}
-
+.control-center-list { background: transparent; }
+.control-center .notification-row { padding: 2px 0; }
 .control-center .notification {
-  margin: 0;
+    background: @glass-hi;
+    border: none;
 }
 
-/* --- Title widget ------------------------------------------- */
-.widget-title {
-  background: transparent;
-  padding: 8px 12px 4px;
-  margin: 0 0 4px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: @cyan;
-}
-
-.widget-title > label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: @cyan;
-}
-
-/* Dismiss-all / clear-all button */
+.widget-title { margin: 8px 10px 4px 10px; }
+.widget-title > label { color: @text; font-size: 16px; font-weight: 700; }
 .widget-title > button {
-  background: @bg_raised;
-  border: 1px solid @border;
-  border-radius: 8px;
-  padding: 6px 14px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  color: @text;
+    background: @glass-hi;
+    color: @text;
+    border-radius: 10px;
+    padding: 4px 12px;
 }
+.widget-title > button:hover { background: @pink-soft; color: @pink; }
 
-.widget-title > button:hover {
-  background: @bg_hover;
-  border-color: @cyan;
-  color: @cyan;
-}
-
-/* --- DND toggle widget -------------------------------------- */
-.widget-dnd {
-  background: @bg_surface;
-  border: 1px solid alpha(@violet, 0.2);
-  border-radius: 10px;
-  padding: 8px 12px;
-  margin: 4px 0 8px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
+.widget-dnd { margin: 4px 10px; color: @text; }
 .widget-dnd > switch {
-  border-radius: 10px;
-  background: @bg_raised;
-  border: 1px solid @border;
+    background: @glass-hi;
+    border-radius: 99px;
+    border: none;
 }
-
-.widget-dnd > switch:checked {
-  background: alpha(@violet, 0.35);
-  border-color: @violet;
-}
-
+.widget-dnd > switch:checked { background: @pink; }
 .widget-dnd > switch slider {
-  border-radius: 50%;
-  background: @text;
-  min-width: 18px;
-  min-height: 18px;
-  margin: 2px;
+    background: @text;
+    border-radius: 99px;
+    min-width: 18px;
+    min-height: 18px;
+}
+.widget-dnd > switch:checked slider { background: @glass; }
+
+/* Lưới nút nhanh */
+.widget-buttons-grid { margin: 6px 10px; padding: 0; background: transparent; }
+.widget-buttons-grid > flowbox > flowboxchild > button {
+    background: @glass-hi;
+    color: @text;
+    border-radius: 14px;
+    padding: 10px 0;
+}
+.widget-buttons-grid > flowbox > flowboxchild > button:hover { background: @pink-soft; color: @pink; }
+
+/* Thanh trượt âm lượng / độ sáng */
+.widget-volume, .widget-backlight { margin: 4px 10px; color: @text; }
+.widget-volume scale trough, .widget-backlight scale trough {
+    background: @glass-hi;
+    border-radius: 99px;
+    min-height: 8px;
+}
+.widget-volume scale highlight, .widget-backlight scale highlight {
+    background: @pink;
+    border-radius: 99px;
+}
+.widget-volume scale slider, .widget-backlight scale slider {
+    background: @text;
+    border-radius: 99px;
+    min-width: 16px;
+    min-height: 16px;
+    margin: -4px;
 }
 
-.widget-dnd > switch:checked slider {
-  background: @violet;
-}
+/* Trình phát nhạc */
+.widget-mpris { margin: 4px 10px; color: @text; }
+.widget-mpris-title    { font-weight: 700; color: @text; }
+.widget-mpris-subtitle { color: @text-muted; }
+.widget-mpris button { color: @text; border-radius: 99px; }
+.widget-mpris button:hover { background: @glass-hi; }
 
-/* --- Floating button (top-bar bell icon dot) ---------------- */
-.widget-inhibitors > button {
-  font-size: 12px;
-}
+.control-center-list > row > box > label { color: @text-muted; margin: 24px; }
 
-/* === EMPTY STATE ============================================ */
-.control-center-list > row > box > label {
-  /* "No Notifications" placeholder */
-  color: @text_dim;
-  font-size: 13px;
-  font-style: italic;
-  padding: 24px 0;
-}
+scrollbar { background: transparent; }
+scrollbar slider { background: @glass-hi; border-radius: 99px; min-width: 4px; }
 
-/* === SCROLLBAR ============================================== */
-scrollbar {
-  border-radius: 4px;
-}
-
-scrollbar slider {
-  background: alpha(@cyan, 0.15);
-  border-radius: 4px;
-  min-width: 4px;
-}
-
-scrollbar slider:hover {
-  background: alpha(@cyan, 0.3);
-}
-
-/* === BLANK WINDOW (behind popups) =========================== */
-.blank-window {
-  background: transparent;
-}
+.blank-window { background: transparent; }

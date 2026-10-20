@@ -1,0 +1,131 @@
+/* ╔══════════════════════════════════════════════════════════╗
+   ║  WAYBAR — SAKURA GLASS · GTK3 CSS                        ║
+   ║  Màu lấy từ tokens.css (sinh từ themes/sakura-glass.json) ║
+   ╚══════════════════════════════════════════════════════════╝
+   Lưu ý GTK3: không có backdrop-filter. Độ mờ kính do COMPOSITOR làm
+   (layerrule blur trong hyprland.conf), CSS chỉ cung cấp màu bán trong suốt. */
+@import "tokens.css";
+
+* {
+    font-family: "SF Pro Display", "Inter", "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+/* Thanh nền trong suốt hoàn toàn: chỉ 3 đảo bên trong có màu */
+window#waybar {
+    background: transparent;
+    color: @text;
+}
+
+/* ── 3 ĐẢO ──────────────────────────────────────────────── */
+.modules-left,
+.modules-center,
+.modules-right {
+    background: @glass;
+    border: 1px solid @specular;
+    border-radius: 16px;
+    padding: 0 6px;
+}
+
+/* ── MODULE CHUNG ───────────────────────────────────────── */
+#custom-launcher,
+#clock,
+#mpris,
+#power-profiles-daemon,
+#network,
+#pulseaudio,
+#backlight,
+#battery,
+#custom-notification,
+#custom-power {
+    color: @text;
+    padding: 0 10px;
+    margin: 4px 1px;
+    border-radius: 12px;
+    transition: background 200ms cubic-bezier(0.25, 1, 0.5, 1),
+                color 200ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#custom-launcher:hover,
+#clock:hover,
+#mpris:hover,
+#power-profiles-daemon:hover,
+#network:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#battery:hover,
+#custom-notification:hover {
+    background: @glass-hi;
+}
+
+/* ── ĐẢO TRÁI ───────────────────────────────────────────── */
+#custom-launcher {
+    color: @pink;
+    font-size: 16px;
+    padding: 0 12px 0 10px;
+}
+
+/* Workspace: chấm tròn 6x6px, active = viên thuốc 24x6px.
+   Chiều cao = (36px bar - 2px viền đảo - 2 x 14px margin) = 6px, nên chấm luôn tròn. */
+#workspaces {
+    margin: 0 4px 0 0;
+    padding: 0 2px;
+}
+
+#workspaces button {
+    min-width: 6px;
+    min-height: 6px;
+    padding: 0;
+    margin: 14px 4px;
+    border: none;
+    border-radius: 99px;
+    background-color: @text-muted;
+    transition: min-width 250ms cubic-bezier(0.25, 1, 0.5, 1),
+                background-color 250ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#workspaces button.empty  { background-color: rgba(245, 245, 247, 0.28); }
+#workspaces button:hover  { background-color: @text; }
+#workspaces button.active { min-width: 24px; background-color: @pink; }
+#workspaces button.urgent { background-color: @red; }
+
+/* ── ĐẢO GIỮA ───────────────────────────────────────────── */
+#clock { padding: 0 14px; }
+#mpris { color: @text-muted; }
+
+/* ── ĐẢO PHẢI ───────────────────────────────────────────── */
+#network.disconnected    { color: @text-muted; }
+#pulseaudio.muted        { color: @text-muted; }
+#power-profiles-daemon.performance { color: @pink; }
+#power-profiles-daemon.power-saver { color: @amber; }
+
+#battery.charging,
+#battery.plugged                    { color: @green; }
+#battery.warning:not(.charging)     { color: @amber; }
+#battery.critical:not(.charging)    { color: @red; }
+
+#custom-notification.notification   { color: @pink; }
+#custom-notification.dnd-none,
+#custom-notification.dnd-notification { color: @text-muted; }
+
+#custom-power {
+    color: @red;
+    padding: 0 12px 0 10px;
+}
+#custom-power:hover {
+    background: alpha(@red, 0.22);
+}
+
+/* ── TOOLTIP ────────────────────────────────────────────── */
+tooltip {
+    background: @glass-strong;
+    border: 1px solid @specular;
+    border-radius: 12px;
+}
+tooltip label { color: @text; padding: 2px 4px; }

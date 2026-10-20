@@ -62,6 +62,7 @@ PKGS="hyprland hyprlock hypridle hyprpolkitagent awww python-pywal \
   networkmanager nm-connection-editor blueman \
   power-profiles-daemon lm_sensors \
   intel-media-driver vulkan-intel libva-utils mesa-utils \
+  waybar inter-font \
   imagemagick fzf jq bat btop \
   ttf-jetbrains-mono-nerd noto-fonts-emoji papirus-icon-theme breeze \
   fcitx5 fcitx5-gtk fcitx5-qt fcitx5-unikey \
@@ -78,9 +79,12 @@ sudo pacman -S --needed --noconfirm $OFFICIAL || warn "pacman báo lỗi — ki�
 # Nếu máy đang bật tlp:  sudo systemctl disable --now tlp
 
 log "AUR"
-for p in $AURLIST grimblast-git aylurs-gtk-shell-git; do aur "$p"; done
+for p in $AURLIST grimblast-git; do aur "$p"; done
 
 # ── 2. SYMLINKS ──────────────────────────────────────────────
+log "THEME (Sakura Glass)"
+python3 "$D/scripts/theme-gen.py" >/dev/null && ok "Token màu đã sinh từ themes/sakura-glass.json"
+
 log "SYMLINKS"
 mkdir -p "$HOME/.config"
 lnk "$D/config/hypr"    "$HOME/.config/hypr"
@@ -88,7 +92,9 @@ lnk "$D/config/wlogout" "$HOME/.config/wlogout"
 lnk "$D/config/kitty"   "$HOME/.config/kitty"
 lnk "$D/config/rofi"    "$HOME/.config/rofi"
 lnk "$D/config/swaync"  "$HOME/.config/swaync"
-lnk "$D/config/ags"     "$HOME/.config/ags"
+lnk "$D/config/waybar"  "$HOME/.config/waybar"
+# AGS đã bỏ (thay bằng Waybar + swaync) -> dọn symlink cũ nếu còn
+[ -L "$HOME/.config/ags" ] && rm -f "$HOME/.config/ags"
 
 # nano cần tạo thư mục trước
 mkdir -p "$HOME/.config/nano"

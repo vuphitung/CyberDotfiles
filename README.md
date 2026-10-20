@@ -23,22 +23,22 @@ Sau đó:
 ```
 CyberDotfiles/
 ├── config/
-│   ├── ags/                ← Desktop bar + Control Center (TypeScript/GTK3)
+│   ├── waybar/             ← Top bar: 3 đảo kính nổi (Sakura Glass)
 │   ├── hypr/
 │   │   ├── hyprland.conf   ← config chính, KHÔNG sửa trực tiếp
 │   │   ├── hypridle.conf   ← idle daemon (auto lock / suspend)
-│   │   ├── hyprlock.conf   ← lock screen Nebula theme
+│   │   ├── hyprlock.conf   ← lock screen Sakura Glass
 │   │   └── user.conf       ← override cá nhân, sửa thoải mái
 │   ├── kitty/
 │   │   └── kitty.conf      ← terminal, tự đổi màu theo wallpaper
 │   ├── rofi/
-│   │   └── config.rasi     ← app launcher Nebula cyber style
+│   │   └── config.rasi     ← app launcher Sakura Glass
 │   ├── swaync/             ← notification center & popups
 │   │   ├── config.json
 │   │   └── style.css
 │   ├── nano/
 │   │   └── nanorc          ← syntax highlight + line numbers
-│   └── wlogout/            ← power menu Nebula cyber style
+│   └── wlogout/            ← power menu Sakura Glass
 ├── shell/
 │   ├── aliases.sh          ← shortcuts tiện dụng
 │   └── starship.toml       ← prompt nhanh (<1ms)
@@ -67,7 +67,7 @@ CyberDotfiles/
 | `hyprland` | Window manager |
 | `hyprlock` | Lock screen |
 | `hypridle` | Idle management daemon |
-| `aylurs-gtk-shell-git` | Desktop bar & Control Center (AGS v3, AUR) |
+| `waybar` | Top bar 3 đảo nổi (module native, nhẹ) |
 | `awww` | Wallpaper daemon (hiệu ứng chuyển ảnh) |
 | `python-pywal` | Tự sinh màu theo wallpaper |
 | `kitty` | Terminal |
@@ -89,7 +89,7 @@ CyberDotfiles/
 | `Super + E` | File manager (nautilus) |
 | `Super + G` | Chrome |
 | `Super + Space` | App launcher (rofi) |
-| `Super + B` | Bảng điều khiển / Control Center (AGS) |
+| `Super + B` | Bảng điều khiển / Control Center (swaync) |
 | `Super + I` | Notifications (swaync) |
 | `Super + C` | Đóng cửa sổ |
 | `Super + F` | Fullscreen |
@@ -134,6 +134,6 @@ Hệ thống dùng **pywal** để sinh màu từ wallpaper:
 - [x] Phase 0 — Cấu trúc chuẩn, install script
 - [x] Phase 1 — Kitty + Rofi + pywal integration
 - [x] Phase 2 — Performance tuning Intel iGPU
-- [x] Phase 3 — AGS bar + Control Center (Nebula Control Deck)
-- [x] Phase 4 — Hyprlock theme (Nebula orbital cybernetic)
-- [x] Phase 5 — Notification Center & Settings (SwayNC + AGS Control Center)
+- [x] Phase 3 — Waybar 3 đảo + Control Center (swaync) — Sakura Glass
+- [x] Phase 4 — Hyprlock theme (Sakura Glass)
+- [x] Phase 5 — Notification Center & Settings (SwayNC Control Center)

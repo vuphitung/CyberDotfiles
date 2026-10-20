@@ -19,7 +19,7 @@
 | Super + L | wlogout |
 | Super + P | hyprlock |
 | Super + I | swaync-client -t (thông báo) |
-| Super + B | ags toggle control-center (bảng điều khiển) |
+| Super + B | swaync-client -t (bảng điều khiển: thông báo + âm lượng/độ sáng/nhạc) |
 | Super + W | wall-picker.sh |
 | Super + F1 | keyhints.sh |
 | Super + Tab | workspace previous |

@@ -1,0 +1,15 @@
+/* GENERATED từ themes/sakura-glass.json bởi scripts/theme-gen.py — ĐỪNG SỬA TAY */
+* {
+    glass: #18182080;
+    glass-strong: #181820b8;
+    glass-hi: #ffffff1f;
+    specular: #ffffff2e;
+    text: #f5f5f7ff;
+    text-muted: #f5f5f78c;
+    pink: #ffb7c5ff;
+    pink-soft: #ffb7c533;
+    green: #34c759ff;
+    amber: #ffd60aff;
+    red: #ff453aff;
+    shadow: #00000040;
+}
