@@ -60,7 +60,7 @@ PKGS="hyprland hyprlock hypridle hyprpolkitagent awww python-pywal \
   pipewire pipewire-pulse wireplumber pamixer playerctl brightnessctl \
   swaync libnotify \
   networkmanager nm-connection-editor blueman \
-  power-profiles-daemon lm_sensors \
+  tlp thermald lm_sensors \
   intel-media-driver vulkan-intel libva-utils mesa-utils \
   waybar inter-font \
   imagemagick fzf jq bat btop \
@@ -75,8 +75,7 @@ for p in $PKGS; do
     if pacman -Si "$p" &>/dev/null; then OFFICIAL="$OFFICIAL $p"; else AURLIST="$AURLIST $p"; fi
 done
 sudo pacman -S --needed --noconfirm $OFFICIAL || warn "pacman báo lỗi — kiểm tra phía trên"
-# Lưu ý: tlp đã bị bỏ vì xung đột power-profiles-daemon.
-# Nếu máy đang bật tlp:  sudo systemctl disable --now tlp
+# Nguồn điện do TLP quản lý (system/tlp/90-cyber.conf). KHÔNG cài power-profiles-daemon: xung đột với tlp.
 
 log "AUR"
 for p in $AURLIST grimblast-git; do aur "$p"; done
@@ -95,6 +94,11 @@ lnk "$D/config/swaync"  "$HOME/.config/swaync"
 lnk "$D/config/waybar"  "$HOME/.config/waybar"
 # AGS đã bỏ (thay bằng Waybar + swaync) -> dọn symlink cũ nếu còn
 [ -L "$HOME/.config/ags" ] && rm -f "$HOME/.config/ags"
+
+# Chrome/Chromium chạy Wayland native
+for f in chrome-flags.conf chromium-flags.conf; do
+    ln -sf "$D/config/chrome/chrome-flags.conf" "$HOME/.config/$f" && ok "Linked: ~/.config/$f"
+done
 
 # nano cần tạo thư mục trước
 mkdir -p "$HOME/.config/nano"
@@ -124,6 +128,17 @@ if ! grep -q "starship init" "$HOME/.zshrc" 2>/dev/null; then
     ok "Đã thêm starship init vào ~/.zshrc"
 else
     ok "starship init đã có"
+fi
+
+# ── TLP (CPU/nguồn điện) ─────────────────────────────────────
+log "TLP"
+if command -v tlp >/dev/null 2>&1; then
+    # Tên cũ trong /etc/tlp.conf bị TLP dịch đè lên tlp.d -> comment lại
+    sudo sed -i -E 's/^(CPU_ENERGY_PERF_POLICY_ON_(AC|BAT)=)/#\1/' /etc/tlp.conf
+    sudo install -Dm644 "$D/system/tlp/90-cyber.conf" /etc/tlp.d/90-cyber.conf \
+        && sudo tlp start >/dev/null 2>&1 && ok "TLP: EPP trên pin = balance_performance"
+else
+    warn "Chưa cài tlp — bỏ qua cấu hình nguồn (sudo pacman -S tlp)"
 fi
 
 # ── 4. THƯ MỤC ──────────────────────────────────────────────

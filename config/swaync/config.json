@@ -16,6 +16,7 @@
   "control-center-margin-top": 8,
   "control-center-margin-right": 12,
   "control-center-margin-bottom": 12,
+  "control-center-margin-left": 0,
 
   "timeout": 5,
   "timeout-low": 3,
@@ -59,7 +60,11 @@
     },
     "mpris": {
       "image-size": 56,
-      "image-radius": 12
+      "image-radius": 12,
+      "autohide": true
+    },
+    "notifications": {
+      "vexpand": true
     },
     "buttons-grid": {
       "actions": [

@@ -1,139 +1,69 @@
-# CyberTung Dotfiles v6
+# CyberDotfiles v7 — Lua Native Architecture & Sakura Glass
 
-Dotfiles cá nhân — Arch Linux + Hyprland.  
-Tối ưu cho **Intel iGPU**, laptop **2560x1440@60Hz**.
+Hệ thống cấu hình Desktop hoàn chỉnh cho **Arch Linux + Hyprland 0.57.2 (Lua Native)**.  
+Được thiết kế và tối ưu chuyên biệt cho **Dell Latitude E7470** (**Intel Core i7-6600U · Intel HD Graphics 520 · 8 GB RAM · Màn hình eDP-1 2560×1440@60Hz, Scale 1.25 / Logic 2048×1152**).
 
-## Cài đặt nhanh
+## Điểm Mới Trong Phiên Bản v7
 
-```bash
-git clone https://github.com/vuphucng/CyberDotfiles ~/CyberDotfiles
-cd ~/CyberDotfiles
-bash install.sh
-```
+- **Kiến trúc Lua Native 100% (`config/hypr/hyprland.lua`)**: Chuyển đổi toàn bộ cấu hình sang Lua API chính thức của Hyprland 0.57.2, chia thành các module độc lập có cơ chế cô lập lỗi (`pcall`) trong `config/hypr/modules/`.
+- **Màn hình 2560×1440 ở Scale 1.25**: Khắc phục triệt để lỗi tự động nhảy `scale = 2.0` (1280×720) do `scale = "auto"`, mở rộng không gian hiển thị logic lên **2048×1152** sắc nét.
+- **Khởi động Phiên Làm Việc Tự Động & Chống Trùng Lặp (`scripts/startup.sh`)**: Tự động khởi chạy `hyprpolkitagent`, `swaync`, `waybar`, `awww-daemon`, `wallpaper.sh`, `fcitx5`, `hypridle`, `cliphist` và `power-auto.sh` qua sự kiện `hl.on("hyprland.start", ...)` với khóa `flock` chống trùng lặp.
+- **Theme Engine Nguồn Đơn (`themes/sakura-glass.json` + `scripts/theme-gen.py`)**: Tự động kiểm tra tính hợp lệ (schema validation), sao lưu trước khi ghi, và sinh đồng bộ 7 tệp token cho Hyprland Lua (`tokens.lua`), Hyprlock (`tokens.conf`), Waybar, SwayNC, Wlogout (`tokens.css`), Rofi (`tokens.rasi`) và Kitty (`sakura-glass.conf`).
+- **Tối Ưu Hiệu Năng Intel HD Graphics 520**: Giữ Kawase blur nhẹ (`size = 4`, `passes = 2`, `xray = true`, `new_optimizations = true`), bảo toàn Hardware Cursors (Direct Scanout) và bật Variable Frame Rate (`vfr = true`).
 
-Sau đó:
-1. Thêm ảnh vào `~/Pictures/Wallpapers/wallpapers/`
-2. Chạy `hyprctl reload`
-3. Đăng xuất và đăng nhập lại vào Hyprland
-
----
-
-## Cấu trúc
+## Cấu Trúc Thư Mục
 
 ```
 CyberDotfiles/
 ├── config/
-│   ├── waybar/             ← Top bar: 3 đảo kính nổi (Sakura Glass)
 │   ├── hypr/
-│   │   ├── hyprland.conf   ← config chính, KHÔNG sửa trực tiếp
-│   │   ├── hypridle.conf   ← idle daemon (auto lock / suspend)
-│   │   ├── hyprlock.conf   ← lock screen Sakura Glass
-│   │   └── user.conf       ← override cá nhân, sửa thoải mái
-│   ├── kitty/
-│   │   └── kitty.conf      ← terminal, tự đổi màu theo wallpaper
-│   ├── rofi/
-│   │   └── config.rasi     ← app launcher Sakura Glass
-│   ├── swaync/             ← notification center & popups
-│   │   ├── config.json
-│   │   └── style.css
-│   ├── nano/
-│   │   └── nanorc          ← syntax highlight + line numbers
-│   └── wlogout/            ← power menu Sakura Glass
-├── shell/
-│   ├── aliases.sh          ← shortcuts tiện dụng
-│   └── starship.toml       ← prompt nhanh (<1ms)
+│   │   ├── hyprland.lua          ← Entrypoint Lua duy nhất cho Hyprland 0.57.2
+│   │   ├── user.lua              ← Ghi đè cá nhân (nạp cuối cùng)
+│   │   ├── modules/              ← 12 module Lua (options, monitor, binds, rules, autostart...)
+│   │   ├── themes/tokens.lua     ← Token màu Sakura Glass cho Lua (sinh tự động)
+│   │   ├── tokens.conf           ← Token màu cho hyprlock.conf (sinh tự động)
+│   │   ├── hyprlock.conf         ← Màn hình khóa Sakura Glass
+│   │   ├── hypridle.conf         ← Quản lý nghỉ & tự động khóa màn hình
+│   │   └── hyprland.conf         ← Lưu trữ tham chiếu từ bản v6
+│   ├── waybar/                   ← Top bar 3 đảo nổi (Floating Islands)
+│   ├── swaync/                   ← Trung tâm thông báo & bảng điều khiển nhanh
+│   ├── rofi/                     ← App launcher & Clipboard Sakura Glass
+│   ├── kitty/                    ← Terminal tích hợp Sakura Glass + Pywal
+│   ├── wlogout/                  ← Menu nguồn Sakura Glass
+│   └── nano/                     ← Cấu hình Nano editor
 ├── scripts/
-│   ├── wallpaper.sh        ← awww + pywal, tự reload màu kitty
-│   ├── wall-picker.sh      ← TUI chọn ảnh (fzf + kitty icat)
-│   ├── perf-mode.sh        ← toggle chế độ tiết kiệm Intel iGPU
-│   ├── keyhints.sh         ← xem phím tắt
-│   ├── fix_symlinks.sh     ← sửa symlink nếu bị lỗi
-│   ├── iwlwifi-fix.sh      ← fix wifi Intel
-│   ├── setup_all.sh        ← audit hệ thống
-│   └── check_health.py     ← kiểm tra toàn bộ
-├── docs/
-│   └── keybinds.md
+│   ├── startup.sh                ← Trình điều phối khởi động phiên làm việc
+│   ├── app-launch.sh             ← Mở ứng dụng với cơ chế fallback tự động
+│   ├── theme-gen.py              ← Trình sinh mã màu tập trung (validation + backup + restore)
+│   ├── wallpaper.sh              ← Quản lý hình nền awww + pywal
+│   ├── wall-picker.sh            ← Bộ chọn hình nền PRISM TUI
+│   ├── power-auto.sh             ← Power profile + chế độ Lite tự động theo sạc/pin (<=30%)
+│   ├── screenshot.sh / lagcheck.sh ← Chụp ảnh nhẹ / chẩn đoán lag
+│   ├── keyhints.sh               ← Bảng tra cứu phím tắt trực tiếp từ runtime
+│   └── check_health.py           ← Kiểm toán toàn diện hệ thống v7
 ├── themes/
-├── install.sh
-└── README.md
+│   └── sakura-glass.json         ← Nguồn dữ liệu màu sắc & font duy nhất
+├── docs/
+│   ├── ARCHITECTURE_V7.md        ← Tài liệu thiết kế kiến trúc v7
+│   ├── MIGRATION_LUA.md          ← Hướng dẫn chuyển đổi Hyprlang sang Lua 0.57.2
+│   ├── KEYBIND_REFERENCE.md      ← Tài liệu tham chiếu phím tắt đầy đủ
+│   └── TROUBLESHOOTING.md        ← Hướng dẫn đổi scale, chẩn đoán & rollback
+└── install.sh
 ```
 
----
+## Vận Hành Nhanh
 
-## Phụ thuộc
-
-| Package | Vai trò |
-|---|---|
-| `hyprland` | Window manager |
-| `hyprlock` | Lock screen |
-| `hypridle` | Idle management daemon |
-| `waybar` | Top bar 3 đảo nổi (module native, nhẹ) |
-| `awww` | Wallpaper daemon (hiệu ứng chuyển ảnh) |
-| `python-pywal` | Tự sinh màu theo wallpaper |
-| `kitty` | Terminal |
-| `rofi` | App launcher |
-| `swaync` | Notification center |
-| `wlogout` | Power menu |
-| `grimblast-git` | Screenshot (AUR) |
-| `starship` | Prompt shell nhanh |
-| `fcitx5` | Input method (gõ tiếng Việt) |
-| `ttf-jetbrains-mono-nerd` | Font terminal & icons |
-
----
-
-## Phím tắt
-
-| Phím | Hành động |
-|---|---|
-| `Super + Q` | Mở terminal (kitty) |
-| `Super + E` | File manager (nautilus) |
-| `Super + G` | Chrome |
-| `Super + Space` | App launcher (rofi) |
-| `Super + B` | Bảng điều khiển / Control Center (swaync) |
-| `Super + I` | Notifications (swaync) |
-| `Super + C` | Đóng cửa sổ |
-| `Super + F` | Fullscreen |
-| `Super + V` | Floating window |
-| `Super + L` | Power menu (wlogout) |
-| `Super + P` | Lock screen (hyprlock) |
-| `Super + W` | Chọn wallpaper |
-| `Super + F1` | Xem phím tắt |
-| `Super + R` | Resize mode |
-| `Super + Tab` | Workspace trước |
-| `Super + 1-6` | Chuyển workspace |
-| `Super + Shift + 1-6` | Chuyển window sang workspace |
-| `Super + Shift + V` | Lịch sử clipboard |
-| `Super + Shift + B` | Bật/tắt chế độ tiết kiệm pin (perf-mode) |
-| `Super + Shift + S` | Screenshot vùng chọn |
-| `Print` | Screenshot toàn màn hình |
-
----
-
-## Tuỳ chỉnh
-
-Sửa `config/hypr/user.conf` để thay đổi:
-- Hiệu ứng blur, dim, animation
-- Cursor
-- Biến môi trường
-
-**Không sửa `hyprland.conf` trực tiếp** — dùng `user.conf` để override.
-
----
-
-## Màu sắc tự động
-
-Hệ thống dùng **pywal** để sinh màu từ wallpaper:
-- Kitty terminal tự đổi màu khi đổi wallpaper
-- Rofi launcher tự đổi màu theo
-- Đổi wallpaper bằng `Super + W` hoặc lệnh `wal-pick`
-
----
-
-## Roadmap
-
-- [x] Phase 0 — Cấu trúc chuẩn, install script
-- [x] Phase 1 — Kitty + Rofi + pywal integration
-- [x] Phase 2 — Performance tuning Intel iGPU
-- [x] Phase 3 — Waybar 3 đảo + Control Center (swaync) — Sakura Glass
-- [x] Phase 4 — Hyprlock theme (Sakura Glass)
-- [x] Phase 5 — Notification Center & Settings (SwayNC Control Center)
+1. **Sinh lại bộ mã màu Sakura Glass**:
+   ```bash
+   python3 ~/CyberDotfiles/scripts/theme-gen.py
+   ```
+2. **Nạp lại cấu hình Hyprland 0.57.2 và kiểm tra lỗi**:
+   ```bash
+   hyprctl reload && hyprctl configerrors
+   ```
+3. **Kiểm tra sức khỏe toàn hệ thống**:
+   ```bash
+   python3 ~/CyberDotfiles/scripts/check_health.py
+   ```
+4. **Thay đổi tỷ lệ Scale màn hình**:
+   Sửa trường `monitor.primary.scale` trong `config/hypr/modules/options.lua` (mặc định `1.25`, có thể đổi sang `1.333333` hoặc `1.5`) rồi chạy `hyprctl reload`.

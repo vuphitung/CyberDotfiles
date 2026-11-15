@@ -1,245 +1,201 @@
 #!/usr/bin/env python3
-# check_health.py — CyberTung System Health Check v6
+"""check_health.py — CyberDotfiles v7 System & Lua Architecture Auditor."""
 
-import glob, os, re, shutil, subprocess
+import glob
+import json
+import os
+import re
+import shutil
+import subprocess
 
 D = os.path.expanduser("~/CyberDotfiles")
+if not os.path.isdir(D):
+    D = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 FILES = {
-    "Hyprland config":  "~/.config/hypr/hyprland.conf",
-    "Hyprlock config":  "~/.config/hypr/hyprlock.conf",
-    "Wlogout layout":   "~/.config/wlogout/layout",
-    "Wlogout style":    "~/.config/wlogout/style.css",
-    "SwayNC config":    "~/.config/swaync/config.json",
-    "Waybar config":    "~/.config/waybar/config.jsonc",
-    "Waybar style":     "~/.config/waybar/style.css",
-    "Theme tokens":     "~/.config/waybar/tokens.css",
-    "iwlwifi fix":      "/etc/modprobe.d/iwlwifi.conf",
+    "Hyprland Lua Entry":  "~/.config/hypr/hyprland.lua",
+    "Hyprland Options":    "~/.config/hypr/modules/options.lua",
+    "Hyprland Tokens Lua": "~/.config/hypr/themes/tokens.lua",
+    "Hyprlock Config":     "~/.config/hypr/hyprlock.conf",
+    "Hypridle Config":     "~/.config/hypr/hypridle.conf",
+    "Waybar Config":       "~/.config/waybar/config.jsonc",
+    "Waybar Style":        "~/.config/waybar/style.css",
+    "SwayNC Config":       "~/.config/swaync/config.json",
+    "SwayNC Style":        "~/.config/swaync/style.css",
+    "Rofi Config":         "~/.config/rofi/config.rasi",
+    "Wlogout Layout":      "~/.config/wlogout/layout",
+    "Wlogout Style":       "~/.config/wlogout/style.css",
+    "Sakura Glass JSON":   f"{D}/themes/sakura-glass.json",
 }
+
+LUA_MODULES = [
+    "init.lua",
+    "options.lua",
+    "environment.lua",
+    "monitor.lua",
+    "input.lua",
+    "appearance.lua",
+    "animations.lua",
+    "workspaces.lua",
+    "window-rules.lua",
+    "layer-rules.lua",
+    "binds.lua",
+    "autostart.lua",
+]
+
 SCRIPTS = {
-    "wallpaper.sh":     f"{D}/scripts/wallpaper.sh",
-    "wall-picker.sh":   f"{D}/scripts/wall-picker.sh",
-    "keyhints.sh":      f"{D}/scripts/keyhints.sh",
-    "setup_all.sh":     f"{D}/scripts/setup_all.sh",
-    "iwlwifi-fix.sh":   f"{D}/scripts/iwlwifi-fix.sh",
+    "startup.sh":      f"{D}/scripts/startup.sh",
+    "app-launch.sh":   f"{D}/scripts/app-launch.sh",
+    "theme-gen.py":    f"{D}/scripts/theme-gen.py",
+    "wallpaper.sh":    f"{D}/scripts/wallpaper.sh",
+    "wall-picker.sh":  f"{D}/scripts/wall-picker.sh",
+    "power-auto.sh":   f"{D}/scripts/power-auto.sh",
+    "screenshot.sh":   f"{D}/scripts/screenshot.sh",
+    "lagcheck.sh":     f"{D}/scripts/lagcheck.sh",
+    "keyhints.sh":     f"{D}/scripts/keyhints.sh",
+    "fix_symlinks.sh": f"{D}/scripts/fix_symlinks.sh",
 }
+
 APPS = [
     "hyprland", "hyprlock", "hypridle", "awww", "kitty", "rofi", "wlogout",
-    "waybar", "wpctl", "pamixer", "playerctl", "brightnessctl", "grimblast",
-    "swaync", "notify-send", "nmcli", "wal", "sensors", "fcitx5",
+    "waybar", "wpctl", "playerctl", "brightnessctl", "grimblast",
+    "swaync", "notify-send", "nmcli", "wal", "fcitx5", "wl-paste", "cliphist",
 ]
-PROCS = {"awww/swww-daemon": "awww-daemon|swww-daemon", "waybar": "waybar", "swaync": "swaync",
-         "hypridle": "hypridle", "fcitx5": "fcitx5", "polkit agent": "hyprpolkitagent|polkit-kde-authentication"}
 
-def chk_file(p): return os.path.exists(os.path.expanduser(p))
-def chk_proc(k):
-    try: return subprocess.run(["pgrep","-f",k],capture_output=True).returncode==0
-    except: return False
-def get_temp():
-    try:
-        r = subprocess.run(["sensors"],capture_output=True,text=True)
-        for l in r.stdout.splitlines():
-            if any(k in l for k in ["Package id 0","Tdie","Tccd","CPU Temp"]):
-                m = re.search(r"\+(\d+\.\d+)°C",l)
-                if m: return float(m.group(1))
-    except: pass
-    try:
-        ts = []
-        for f in glob.glob("/sys/class/thermal/thermal_zone*/temp"):
-            v = int(open(f).read())//1000
-            if 0<v<120: ts.append(v)
-        return max(ts) if ts else None
-    except: return None
-def chk_gpu_renderer():
-    if not shutil.which("glxinfo"):
-        return None
-    try:
-        r = subprocess.run(["glxinfo"], capture_output=True, text=True, timeout=5)
-        for l in r.stdout.splitlines():
-            if "OpenGL renderer" in l:
-                return l.split(":",1)[1].strip()
-    except: pass
-    return None
+PROCS = {
+    "awww/swww-daemon": "awww-daemon|swww-daemon",
+    "waybar":           "^waybar$",
+    "swaync":           "^swaync$",
+    "hypridle":         "^hypridle$",
+    "fcitx5":           "^fcitx5$",
+    "polkit agent":     "hyprpolkitagent|polkit-kde-authentication|polkit-gnome",
+}
 
-def chk_hw_cursor():
-    try:
-        r = subprocess.run(["hyprctl","getoption","cursor:no_hardware_cursors"],
-                            capture_output=True, text=True, timeout=3)
-        return r.stdout.strip()
-    except: return None
 
-def chk_mem_pressure():
+def sh(cmd: str) -> str:
     try:
-        with open("/proc/pressure/memory") as f:
-            for l in f:
-                if l.startswith("some"):
-                    m = re.search(r"avg60=(\d+\.\d+)", l)
-                    if m: return float(m.group(1))
-    except: pass
-    return None
-
-def chk_faillock():
-    user = os.environ.get("USER") or os.environ.get("LOGNAME")
-    if not user:
-        return None
-    try:
-        r = subprocess.run(["faillock", "--user", user], capture_output=True, text=True, timeout=3)
-        lines = [l for l in r.stdout.splitlines() if l.strip().endswith(("V","I"))]
-        # Count recent valid failures
-        recent_fails = sum(1 for l in lines if l.rstrip().endswith("V"))
-        return recent_fails
+        return subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=8).stdout.strip()
     except Exception:
-        return None
+        return ""
 
-def chk_wifi():
+
+def chk_file(p: str) -> bool:
+    return os.path.exists(os.path.expanduser(p))
+
+
+def count_proc(pattern: str) -> int:
     try:
-        r = subprocess.run(["iw","dev"],capture_output=True,text=True)
-        iface = next((l.split()[-1] for l in r.stdout.splitlines() if "Interface" in l),None)
-        if iface:
-            r2 = subprocess.run(["iw","dev",iface,"get","power_save"],capture_output=True,text=True)
-            return "off" in r2.stdout.lower(), iface
-    except: pass
-    return None, None
+        r = subprocess.run(["pgrep", "-f", pattern], capture_output=True, text=True, timeout=3)
+        if r.returncode != 0:
+            return 0
+        return len([line for line in r.stdout.splitlines() if line.strip()])
+    except Exception:
+        return 0
 
 
-def sh(cmd):
-    try: return subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=10).stdout.strip()
-    except Exception: return ""
-
-def chk_system_extra():
-    """Các kiểm tra rút ra từ lỗi thật sau khi Arch cập nhật. Trả về số vấn đề."""
+def chk_hypland_runtime() -> int:
     n = 0
-    print("\n  ─── Hyprland / hệ thống")
+    print("\n  ─── Hyprland 0.57.2 & Monitor Runtime")
     ver = sh("hyprctl version 2>/dev/null | head -1")
-    print(f"    ℹ️  {ver or 'hyprctl không chạy (không ở trong phiên Hyprland?)'}")
-    if ver:
-        errs = sh("hyprctl configerrors 2>/dev/null")
-        ok = (errs == "")
-        print(f"    {'✅' if ok else '❌'} configerrors {'sạch' if ok else '→ có lỗi:'}")
-        if not ok: print("       " + errs.replace("\n", "\n       ")); n += 1
-        if os.path.exists(os.path.expanduser("~/.config/hypr/hyprland.conf")) and not os.path.exists(os.path.expanduser("~/.config/hypr/hyprland.lua")):
-            print("    ⚠️  Đang dùng hyprlang (hyprland.conf). Hyprland >= 0.55 đã deprecate — lên kế hoạch chuyển Lua")
-    tlp = sh("systemctl is-active tlp 2>/dev/null") == "active" or sh("systemctl is-enabled tlp 2>/dev/null") == "enabled"
-    ppd = sh("systemctl is-enabled power-profiles-daemon 2>/dev/null") == "enabled"
-    if tlp and ppd:
-        print("    ❌ tlp VÀ power-profiles-daemon cùng bật (xung đột) → sudo systemctl disable --now tlp"); n += 1
-    prof = sh("powerprofilesctl get 2>/dev/null")
-    bat = sh("cat /sys/class/power_supply/BAT*/status 2>/dev/null")
-    if prof == "performance" and "Discharging" in bat:
-        print("    ⚠️  Đang chạy bằng pin nhưng profile = performance → powerprofilesctl set balanced"); n += 1
-    if prof == "power-saver" and "Discharging" not in bat:
-        print("    ❌ Đang cắm sạc mà profile = power-saver → CPU bị kìm xung nhịp (Chrome lag). powerprofilesctl set performance"); n += 1
-    epp = sh("cat /sys/devices/system/cpu/cpu0/cpufreq/energy_performance_preference 2>/dev/null")
-    if prof == "power-saver" and epp:
-        print(f"    ⚠️  power-saver (EPP={epp}) giữ CPU ~800MHz — máy 2 nhân sẽ lag khi dùng Chrome"); n += 1
-    if not sh("pgrep -f power-auto.sh"):
-        print("    ⚠️  power-auto.sh không chạy (profile không tự đổi theo nguồn điện)"); n += 1
-    cores = sh("coredumpctl list --since '-7 days' --no-pager 2>/dev/null | grep -c python")
-    if cores and cores != "0":
-        print(f"    ⚠️  {cores} crash python trong 7 ngày → coredumpctl info <PID>"); n += 1
+    if not ver:
+        print("    ℹ️  hyprctl không phản hồi (không chạy trong phiên Wayland/Hyprland trực tiếp)")
+        return 0
+
+    print(f"    ✅ {ver}")
+    errs = sh("hyprctl configerrors 2>/dev/null")
+    if not errs:
+        print("    ✅ hyprctl configerrors: Sạch (0 lỗi)")
+    else:
+        print("    ❌ hyprctl configerrors phát hiện lỗi:")
+        print("       " + errs.replace("\n", "\n       "))
+        n += 1
+
+    # Kiểm tra scale màn hình eDP-1
+    mons_raw = sh("hyprctl monitors -j 2>/dev/null")
+    if mons_raw:
+        try:
+            mons = json.loads(mons_raw)
+            for m in mons:
+                name = m.get("name", "?")
+                w, h = m.get("width", 0), m.get("height", 0)
+                scale = m.get("scale", 0)
+                logic_w = round(w / scale) if scale else 0
+                logic_h = round(h / scale) if scale else 0
+                ok_scale = abs(float(scale) - 1.25) < 0.05 if name == "eDP-1" else True
+                icon = "✅" if ok_scale else "⚠️ "
+                print(f"    {icon} Monitor {name}: {w}x{h} @ scale={scale} (không gian logic ~{logic_w}x{logic_h})")
+                if not ok_scale:
+                    n += 1
+        except Exception:
+            pass
     return n
 
-def run():
+
+def run() -> int:
     print()
-    print("  ╔══════════════════════════════════════════╗")
-    print("  ║   CYBERTUNG // HEALTH CHECK v6          ║")
-    print("  ╚══════════════════════════════════════════╝")
+    print("  ╔══════════════════════════════════════════════════╗")
+    print("  ║   CYBERDOTFILES v7 // HEALTH & ARCHITECTURE      ║")
+    print("  ╚══════════════════════════════════════════════════╝")
     issues = 0
 
-    print("\n  ─── Config files")
-    for n,p in FILES.items():
-        ok = chk_file(p)
-        print(f"    {'✅' if ok else '❌'} {n:<22} {os.path.expanduser(p)}")
-        issues += 0 if ok else 1
+    print("\n  ─── Core Config Files")
+    for name, path in FILES.items():
+        ok = chk_file(path)
+        print(f"    {'✅' if ok else '❌'} {name:<22} {os.path.expanduser(path)}")
+        if not ok:
+            issues += 1
+
+    print("\n  ─── Hyprland Lua Modules (config/hypr/modules/)")
+    mod_dir = os.path.join(D, "config", "hypr", "modules")
+    for mod in LUA_MODULES:
+        p = os.path.join(mod_dir, mod)
+        ok = os.path.isfile(p)
+        print(f"    {'✅' if ok else '❌'} modules/{mod:<18} {'OK' if ok else 'MISSING'}")
+        if not ok:
+            issues += 1
 
     print("\n  ─── Scripts")
-    for n,p in SCRIPTS.items():
-        ok = os.path.exists(p)
-        print(f"    {'✅' if ok else '❌'} {n:<22} {p}")
-        issues += 0 if ok else 1
+    for name, path in SCRIPTS.items():
+        ok = os.path.isfile(path) and os.access(path, os.X_OK)
+        print(f"    {'✅' if ok else '❌'} {name:<22} {'executable' if ok else 'missing or not +x'}")
+        if not ok:
+            issues += 1
 
-    print("\n  ─── Apps")
+    print("\n  ─── Installed Packages / Binaries")
     miss = []
-    for a in APPS:
-        ok = shutil.which(a) is not None
-        print(f"    {'✅' if ok else '⚠️ '} {a}")
-        if not ok: miss.append(a); issues += 1
-    if miss: print(f"\n    💡 yay -S {' '.join(miss)}")
+    for app in APPS:
+        ok = shutil.which(app) is not None
+        print(f"    {'✅' if ok else '⚠️ '} {app}")
+        if not ok:
+            miss.append(app)
 
-    print("\n  ─── Processes")
-    for n,k in PROCS.items():
-        ok = chk_proc(k)
-        print(f"    {'🟢' if ok else '🔴'} {n:<20} {'running' if ok else 'NOT running'}")
-        issues += 0 if ok else 1
+    # Check File Manager & Browser candidates
+    fm_ok = any(shutil.which(x) for x in ("nautilus", "dolphin", "thunar", "pcmanfm"))
+    br_ok = any(shutil.which(x) for x in ("google-chrome-stable", "google-chrome", "chromium", "firefox"))
+    print(f"    {'✅' if fm_ok else '⚠️ '} File Manager (nautilus/dolphin/thunar)")
+    print(f"    {'✅' if br_ok else '⚠️ '} Web Browser (google-chrome-stable/chromium/firefox)")
 
-    issues += chk_system_extra()
-
-    print("\n  ─── GPU / Cursor / RAM pressure")
-    renderer = chk_gpu_renderer()
-    if renderer is None and not shutil.which("glxinfo"):
-        print("    ⚠️  glxinfo chưa cài — cài mesa-utils để check renderer")
-        issues += 1
-    elif renderer:
-        if "llvmpipe" in renderer.lower():
-            print(f"    🔥 Renderer: {renderer}  ← ĐANG DÙNG SOFTWARE RENDER (nguyên nhân lag chính!)")
+    print("\n  ─── Daemons & Single-Instance Check")
+    for name, pat in PROCS.items():
+        cnt = count_proc(pat)
+        if cnt == 1:
+            print(f"    🟢 {name:<20} running (1 instance)")
+        elif cnt > 1:
+            print(f"    ⚠️  {name:<20} DUPLICATE ({cnt} instances running!)")
             issues += 1
         else:
-            print(f"    ✅ Renderer: {renderer}")
+            print(f"    ⚪ {name:<20} not running in current environment")
 
-    cur = chk_hw_cursor()
-    if cur:
-        forced = "set: true" in cur
-        val0 = "int: 0" in cur
-        if forced:
-            print(f"    ⚠️  no_hardware_cursors bị ép set (forced) — có thể gây giật cursor lúc login/unlock")
-            issues += 1
-        else:
-            print(f"    ✅ no_hardware_cursors: mặc định (không bị ép)")
+    issues += chk_hypland_runtime()
 
-    pressure = chk_mem_pressure()
-    if pressure is not None:
-        if pressure > 5:
-            print(f"    🔥 Memory pressure (avg60): {pressure}%  ← RAM đang bị nghẽn")
-            issues += 1
-        else:
-            print(f"    ✅ Memory pressure (avg60): {pressure}%")
-
-    print("\n  ─── Sudo / Faillock")
-    fails = chk_faillock()
-    if fails is None:
-        print("    ℹ️  Không đọc được faillock (cần lệnh 'faillock' có sẵn)")
-    elif fails >= 3:
-        print(f"    🔥 {fails} lần sudo auth fail gần đây — có thể sắp/đang bị khóa!")
-        print("       Fix: faillock --user $USER --reset")
-        issues += 1
-    elif fails > 0:
-        print(f"    ⚠️  {fails} lần sudo auth fail gần đây (chưa tới ngưỡng khóa)")
-    else:
-        print("    ✅ Không có lần auth fail nào gần đây")
-
-    print("\n  ─── WiFi")
-    ps, iface = chk_wifi()
-    if ps is True:   print(f"    ✅ {iface}: power_save=off")
-    elif ps is False: print(f"    ⚠️  {iface}: power_save=ON"); issues += 1
-    else:            print("    ℹ️  Không đọc được")
-
-    print("\n  ─── CPU temp")
-    t = get_temp()
-    if t:
-        lbl = f"🔥 {t}°C NGUY HIỂM" if t>85 else f"⚠️ {t}°C Nóng" if t>75 else f"🌡️ {t}°C Ổn" if t>65 else f"❄️ {t}°C Mát"
-        print(f"    {lbl}")
-    else: print("    ⚠️  Không đọc được")
-
-    print("\n  ─── Dotfiles")
-    print(f"    {'✅' if os.path.isdir(f'{D}/.git') else '⚠️ '} Git repo: {D}")
-    print(f"    {'✅' if os.path.isdir(f'{D}/shell') else 'ℹ️ '} Shell: {D}/shell")
-
-    print()
-    print("  " + "═"*44)
+    print("\n  " + "═" * 50)
     if issues == 0:
-        print("  ⚡ SẠCH! git add -A && git push")
+        print("  ⚡ KIẾN TRÚC CYBERDOTFILES v7 SẠCH LỖI CẤU HÌNH!")
     else:
-        print(f"  ⚠️  {issues} vấn đề → bash {D}/install.sh")
+        print(f"  ⚠️  Phát hiện {issues} mục cần lưu ý (xem chi tiết phía trên).")
     print()
+    return issues
 
-if __name__ == "__main__": run()
+
+if __name__ == "__main__":
+    run()

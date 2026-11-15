@@ -1,0 +1,17 @@
+-- ╔══════════════════════════════════════════════════════════════════════╗
+-- ║   CYBERDOTFILES v7 — PERSONAL OVERRIDES (config/hypr/user.lua)       ║
+-- ╚══════════════════════════════════════════════════════════════════════╝
+-- File này được nạp CUỐI CÙNG bởi `modules/init.lua`.
+-- Bạn có thể thêm các ghi đè cá nhân tại đây mà không cần sửa các module cốt lõi.
+--
+-- Ví dụ: Thay đổi nhanh tỷ lệ scale màn hình sang 1.333333 (1920x1080 logic):
+-- hl.monitor({
+--     output   = "eDP-1",
+--     mode     = "2560x1440@60",
+--     position = "0x0",
+--     scale    = 1.333333,
+-- })
+--
+-- Ví dụ: Đổi theme con trỏ sang Bibata-Modern-Ice (nếu đã cài đặt trong /usr/share/icons hoặc ~/.icons):
+-- hl.env("XCURSOR_THEME", "Bibata-Modern-Ice")
+-- hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")

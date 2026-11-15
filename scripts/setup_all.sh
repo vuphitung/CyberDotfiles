@@ -14,10 +14,10 @@ echo -e "${BLUE}  🛡️  CYBER-AUDITOR: KIỂM TRA HỆ THỐNG${NC}"
 
 # ── 1. Xung đột power management ──────────────────────────
 echo -e "\n${BLUE}  → Power management${NC}"
-CONFLICTS=("auto-cpufreq" "tlp")
+CONFLICTS=("auto-cpufreq" "power-profiles-daemon")
 for app in "${CONFLICTS[@]}"; do
     if systemctl is-active --quiet "$app" 2>/dev/null; then
-        echo -e "  ${YELLOW}⚠️  $app đang chạy — conflict với power-profiles-daemon${NC}"
+        echo -e "  ${YELLOW}⚠️  $app đang chạy — conflict với tlp${NC}"
         echo -e "  ${YELLOW}   Tắt thủ công: sudo systemctl disable --now $app${NC}"
     fi
 done
@@ -33,13 +33,11 @@ if lspci 2>/dev/null | grep -iq intel; then
     echo -e "  ${GREEN}✅ Intel driver ok${NC}"
 fi
 
-# ── 3. Power Profile ──────────────────────────────────────
-echo -e "\n${BLUE}  → Power profile${NC}"
-if command -v powerprofilesctl &>/dev/null; then
-    sudo systemctl enable --now power-profiles-daemon &>/dev/null
-    sudo powerprofilesctl set balanced 2>/dev/null \
-        && echo -e "  ${GREEN}✅ Power profile: balanced${NC}" \
-        || echo -e "  ${YELLOW}⚠️  powerprofilesctl set failed${NC}"
+# ── 3. TLP ────────────────────────────────────────────────
+echo -e "\n${BLUE}  → TLP${NC}"
+if command -v tlp &>/dev/null; then
+    sudo systemctl enable --now tlp &>/dev/null
+    echo -e "  ${GREEN}✅ TLP bật (EPP hiện tại: $(cat /sys/devices/system/cpu/cpu0/cpufreq/energy_performance_preference 2>/dev/null))${NC}"
 fi
 
 # ── 4. Sudoers cho scripts ────────────────────────────────

@@ -7,7 +7,7 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 36,
+  "height": 47,
   "margin-top": 8,
   "margin-left": 12,
   "margin-right": 12,
@@ -17,7 +17,7 @@
 
   "modules-left":   ["custom/launcher", "hyprland/workspaces"],
   "modules-center": ["clock", "mpris"],
-  "modules-right":  ["power-profiles-daemon", "network", "pulseaudio", "backlight", "battery", "custom/notification", "custom/power"],
+  "modules-right":  ["network", "pulseaudio", "backlight", "battery", "custom/notification", "custom/power"],
 
   // ── ĐẢO TRÁI ──────────────────────────────────────────────
   "custom/launcher": {
@@ -51,11 +51,7 @@
   },
 
   // ── ĐẢO PHẢI (control center) ─────────────────────────────
-  "power-profiles-daemon": {
-    "format": "{icon}",
-    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
-    "format-icons": { "default": "󰾆", "performance": "󱐋", "balanced": "󰾆", "power-saver": "󰌪" }
-  },
+
 
   "network": {
     "format-wifi": "󰤨",
